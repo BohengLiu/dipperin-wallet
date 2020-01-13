@@ -1,10 +1,10 @@
-import { computed, observable, action } from 'mobx'
+import { computed, observable, action, runInAction } from 'mobx'
 
 import AccountModel, { AccountType, Opt } from '../models/account'
 import RootStore from './root'
 import { Accounts, EncryptResult, helper } from '@dipperin/dipperin.js'
 
-import { getAccount, insertAccount, removeAccount } from '@/db'
+import { getAccount, insertAccount, removeAccount, updateSingleAccount } from '@/db'
 import { FIRST_ACCOUNT_ID, ACCOUNTS_PATH, TRANSACTION_STATUS_SUCCESS } from '@/utils/constants'
 import { TxResponseCode, TxResponseInfo } from '@/utils/errors'
 
@@ -62,12 +62,18 @@ export default class AccountStore {
   /**
    * Load wallet from data store
    */
-  async load() {
+  @action
+  load = async () => {
     try {
       const accounts = await getAccount()
       if (accounts.length > 0) {
         accounts.forEach(account => {
-          this._accountMap.set(String(account.id), this.newAccount(String(account.id), account.path, account.address))
+          runInAction(() => {
+            this._accountMap.set(
+              String(account.id),
+              this.newAccount(String(account.id), account.path, account.address, account.name)
+            )
+          })
         })
       }
       if (this._accountMap.size > 0) {
@@ -77,8 +83,8 @@ export default class AccountStore {
       console.error(err)
     }
   }
-
-  async removeAccountAsync(id: string): Promise<Error | void> {
+  @action
+  removeAccountAsync = async (id: string): Promise<Error | void> => {
     try {
       this._accountMap.delete(id)
       await removeAccount(Number(id))
@@ -97,7 +103,7 @@ export default class AccountStore {
     const newPath = `${ACCOUNTS_PATH}/${newIndex}`
     const address = this._store.wallet.getAccountByPath(newPath).address
     // Add new account
-    const newAccount = this.newAccount(newIndex, newPath, address)
+    const newAccount = this.newAccount(newIndex, newPath, address, '')
     // Save account
     this._accountMap.set(newIndex, newAccount)
     // add to db
@@ -105,6 +111,14 @@ export default class AccountStore {
     this.changeActiveAccount(newAccount.id)
     this.updateAccountsBalance(newAccount.id)
     this.updateAccountsNonce(newAccount.id)
+  }
+  /**
+   * Update account
+   * @param account :AccountModel
+   */
+  @action
+  updateAccount = async (account: AccountModel) => {
+    await updateSingleAccount(account.toJS())
   }
 
   @action
@@ -282,8 +296,8 @@ export default class AccountStore {
    * @param path
    * @param address
    */
-  private newAccount(id: string, path: string, address: string): AccountModel {
-    return new AccountModel(id, path, address)
+  private newAccount(id: string, path: string, address: string, name): AccountModel {
+    return new AccountModel(id, path, address, name)
   }
 
   private importAccount(id: string, address: string, privateKey: string): AccountModel {
@@ -292,7 +306,7 @@ export default class AccountStore {
       type: AccountType.privateKey,
       encryptKey: Accounts.encrypt(privateKey, this._store.wallet.getPrivateKeyByPath(newPath))
     }
-    const newAccount = new AccountModel(id, newPath, address, opt)
+    const newAccount = new AccountModel(id, newPath, address, '', opt)
     return newAccount
   }
 

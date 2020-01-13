@@ -48,6 +48,8 @@ export const START_NODE_FAILURE = 'startNodeFailure'
 export const START_MINER_NODE_SUCCESS = 'startMinerNodeSuccess'
 export const START_SUCCESS = 'startSucces'
 
+export const MOVE_DATA_STATUS = 'moveDataStatus'
+
 export const dipperinManager = new DipperinManager()
 
 const initIPC = (mainWindow: BrowserWindow) => {
@@ -114,8 +116,8 @@ const initIPC = (mainWindow: BrowserWindow) => {
     event.sender.send(CHAIN_DATA_DIR, chainDataDir)
   })
 
-  ipcMain.on(MOVE_CHAIN_DATA_DIR, (_: Event, oldPath: string, newPath: string) => {
-    moveFiles(oldPath, newPath)
+  ipcMain.on(MOVE_CHAIN_DATA_DIR, (event: Event, newPath: string) => {
+    moveFiles(newPath, event)
   })
 }
 

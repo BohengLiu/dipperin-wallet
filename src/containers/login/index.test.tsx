@@ -45,7 +45,7 @@ describe('login', () => {
     login.confirm()
     expect(mockPush).not.toBeCalled()
     expect(mockSwalFire.mock.calls[0][0]).toEqual({
-      type: 'error',
+      icon: 'error',
       title: labels.swal.emptyPassword
     })
   })
@@ -55,7 +55,7 @@ describe('login', () => {
     login.password = 'password'
     await login.confirm()
     expect(mockPush).not.toBeCalled()
-    expect(mockSwalFire.mock.calls[0][0]).toEqual({ type: 'error', title: labels.swal.incorrectPassword })
+    expect(mockSwalFire.mock.calls[0][0]).toEqual({ icon: 'error', title: labels.swal.incorrectPassword })
   })
 
   it('confirm success', async () => {
@@ -65,7 +65,7 @@ describe('login', () => {
     await login.confirm()
     expect(mockSwalFire.mock.calls[0][0]).toEqual({
       text: labels.swal.success,
-      type: 'success',
+      icon: 'success',
       timer: 1000
     })
     expect(mockPush).toBeCalledWith('/main/wallet')
@@ -80,7 +80,7 @@ describe('login', () => {
       showConfirmButton: true,
       cancelButtonText: labels.swal.cancel,
       confirmButtonText: labels.swal.confirm,
-      type: 'warning',
+      icon: 'warning',
       text: labels.swal.warnText,
       title: labels.swal.warn,
       reverseButtons: true

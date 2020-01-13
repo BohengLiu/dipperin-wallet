@@ -87,7 +87,7 @@ export class Login extends React.Component<ILoginProps> {
     // e.preventDefault()
     if (!this.password) {
       swal.fire({
-        type: 'error',
+        icon: 'error',
         title: labels.swal.emptyPassword
       })
       return
@@ -96,7 +96,7 @@ export class Login extends React.Component<ILoginProps> {
     const loginRes = await wallet.unlockWallet(this.password)
     if (!loginRes) {
       await swal.fire({
-        type: 'error',
+        icon: 'error',
         title: labels.swal.incorrectPassword
       })
       runInAction(() => {
@@ -106,7 +106,7 @@ export class Login extends React.Component<ILoginProps> {
     }
     await swal.fire({
       text: labels.swal.success,
-      type: 'success',
+      icon: 'success',
       timer: 1000
     })
 
@@ -128,7 +128,7 @@ export class Login extends React.Component<ILoginProps> {
       showConfirmButton: true,
       cancelButtonText: labels.swal.cancel,
       confirmButtonText: labels.swal.confirm,
-      type: 'warning',
+      icon: 'warning',
       text: labels.swal.warnText,
       title: labels.swal.warn,
       reverseButtons: true

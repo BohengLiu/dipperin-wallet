@@ -1,7 +1,15 @@
 import { computed, observable, reaction, runInAction, action } from 'mobx'
 import { isString } from 'lodash'
 
-import { insertVmContract, getVmContract, updateVmContractStatus, getReceipt, insertReceipt } from '@/db'
+import {
+  insertVmContract,
+  getVmContract,
+  deleteVmContract,
+  updateVmContractStatus,
+  updateVmContract,
+  getReceipt,
+  insertReceipt
+} from '@/db'
 import {
   // DEFAULT_CHAIN_ID,
   TRANSACTION_STATUS_FAIL,
@@ -75,7 +83,6 @@ class VmContractStore {
     if (!this._store.account.activeAccount) {
       return contracts
     }
-
     const accountAddress = this._store.account.activeAccount.address
     this._contract.forEach((contract: VmContractModel) => {
       const owners = contract.owner.map((item: string) => item.toLocaleLowerCase())
@@ -120,6 +127,7 @@ class VmContractStore {
   startUpdate() {
     this._store.timer.on('update_vmContracts', this.updateContractStatus.bind(this), 5000)
     this._store.timer.on('update_vmContracts_receipts', this.getContractReceipt.bind(this), 3000)
+    this._store.timer.on('update_vmContracts_DRC20_token', this.updataDRC20ContractsToken.bind(this), 3000)
   }
 
   async confirmTransaction(
@@ -359,6 +367,19 @@ class VmContractStore {
     this._contract.clear()
     this._pendingContract.clear()
   }
+  @action
+  deleteContract = async (contract: VmContractModel) => {
+    if (contract.status === TRANSACTION_STATUS_SUCCESS) {
+      this._contract.delete(contract.contractAddress)
+    } else {
+      this._pendingContract.delete(contract.txHash)
+    }
+    await deleteVmContract(contract.txHash)
+  }
+  @action
+  updateContract = async (contract: VmContractModel) => {
+    await updateVmContract(contract.toJS())
+  }
 
   reload() {
     this.clear()
@@ -473,6 +494,28 @@ class VmContractStore {
     //     console.log('after casting', this._contract.get(contract.contractAddress))
     //   }
     // })
+  }
+
+  /**
+   * update DRC20 contract token
+   */
+  updataDRC20ContractsToken() {
+    this._contract.forEach(async contract => {
+      const { isDRC20, contractAddress, contractAbi } = contract
+      if (isDRC20) {
+        const res = await this.confirmConstantCallContractMethod(
+          contractAddress,
+          contractAbi,
+          'getBalance',
+          '100000',
+          '1',
+          [this.currentActiveAccount]
+        )
+        if (res.success && typeof res.info === 'string') {
+          contract.setDRC20Token(res.info)
+        }
+      }
+    })
   }
 
   private getContractsFromObj(contractObj: VmContractObj[] = []) {

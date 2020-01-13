@@ -153,10 +153,10 @@ describe('CreateContract', () => {
     expect(instance.getStringField('a')).toBe('1')
   })
 
-  it('handleConfirm', () => {
+  it('handleConfirm', async () => {
     const event = MockFormEvent()
     const spyHandleShowDialog = jest.spyOn(instance, 'handleShowDialog')
-    instance.handleConfirm(event)
+    await instance.handleConfirm(event)
     expect(spyHandleShowDialog).toHaveBeenCalled()
   })
 

@@ -75,6 +75,8 @@ class Main extends React.Component<Props> {
 
   @action
   closeTour = () => {
+    this.props.history.push('/main/wallet')
+    this.handleClose()
     this.showTour = false
     settings.set('showAccountGuide', true)
   }

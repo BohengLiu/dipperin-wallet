@@ -18,7 +18,8 @@ describe('bigAccount', () => {
   const mockAccount = new AccountModel(
     'sqEVSm4jZaNAegxA',
     "m/44'/709394'/0'/0/1",
-    '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37'
+    '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37',
+    ''
   )
   const labels = i18n['zh-CN'].account.accounts
   const classes = mockStyleClasses(styles)
@@ -30,6 +31,8 @@ describe('bigAccount', () => {
     handleChangeActiveAccount,
     activeId: '0x0000000001',
     account: mockAccount,
+    showDialogConfirm: jest.fn(),
+    deleteAccount: jest.fn(),
     ...routerProps
   }
 
@@ -43,7 +46,6 @@ describe('bigAccount', () => {
   })
 
   it('render', () => {
-    // console.log(component.html())
     expect(component.exists()).toBe(true)
   })
 
@@ -53,15 +55,9 @@ describe('bigAccount', () => {
   })
 
   it('copyAddress', () => {
-    // const mockEvent = {
-    //   stopPropagation:jest.fn()
-    // }
-    // console.log(component.html())
     document.execCommand = jest.fn(() => true)
     const btn = component.find('button.copy')
-    // console.log(btn.html())
     btn.simulate('click')
-    // instance.copyAddress('0x',mockEvent)
     expect(mockSwalFire).toHaveBeenCalled()
   })
 })

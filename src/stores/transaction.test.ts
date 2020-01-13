@@ -3,8 +3,8 @@ import TransactionStore from './transaction'
 import mockTransactions from '@/tests/testData/transactions'
 
 describe('Transaction store', () => {
-  let transaction: TransactionStore
   const root = mockRoot(true)
+  let transaction: TransactionStore = new TransactionStore(root)
 
   it('constructor', () => {
     transaction = new TransactionStore(root)
@@ -48,9 +48,7 @@ describe('Transaction store', () => {
       '21000',
       '1'
     )
-    expect(res).toBe(
-      '0xf867e080960000b4293d60F051936beDecfaE1B85d5A46d377aF3780800a0182520880f844a0dc6bc1d05a181d9016ab0c1ddf7db2397063a6cfbe9d55cb512e20967ea58b6ea010225fa3e085119a95b280ec046bff70812f0920e8fed08faa2ca5de0bfd9a0b3a80'
-    )
+    expect(res.gas).toBe('21000')
   })
 
   it('confirmTransaction', async () => {
@@ -67,7 +65,7 @@ describe('Transaction store', () => {
     )
     expect(res).toEqual({
       success: true,
-      hash: '0x22ba8fd210afee8e957b32fb55fe4cd4eb0f59bc2a0f4787627fccd0122f4b04'
+      info: '0x22ba8fd210afee8e957b32fb55fe4cd4eb0f59bc2a0f4787627fccd0122f4b04'
     })
   })
 

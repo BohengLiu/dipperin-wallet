@@ -91,8 +91,8 @@ describe('VmContract store', () => {
     expect(res).toEqual({ success: true })
   })
 
-  it('addContract', () => {
-    const res = vmContract.addContract(mockAbi, '0x001488Fb46F1a09274745d6022EF1A176bcD4C5a02Aa')
+  it('addContract', async () => {
+    const res = await vmContract.addContract(mockAbi, '0x001488Fb46F1a09274745d6022EF1A176bcD4C5a02Aa')
     expect(res).toEqual({ success: true })
   })
 
@@ -140,8 +140,4 @@ describe('VmContract store', () => {
     vmContract.reload()
     expect(vmContract.contract.size).toBe(0)
   })
-
-  // it('getContractReceipt', ()=>{
-
-  // })
 })

@@ -190,3 +190,13 @@ export function decrypt(key: string, iv: string, crypted: string) {
   const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
   return decipher.update(cryptedBuf, 'binary', 'utf8') + decipher.final('utf8')
 }
+
+export function getShowName(name: string) {
+  if (/[\u0391-\uFFE5]/g.test(name) && name.length > 8) {
+    return name.slice(0, 8) + '...'
+  }
+  if (!/[\u0391-\uFFE5]/g.test(name) && name.length > 16) {
+    return name.slice(0, 16) + '...'
+  }
+  return name
+}

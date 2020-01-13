@@ -16,6 +16,7 @@ import { Button, FormControl, Input, InputLabel } from '@material-ui/core'
 import { withStyles, WithStyles } from '@material-ui/styles'
 import { Utils } from '@dipperin/dipperin.js'
 import BN from 'bignumber.js'
+import { ErrMsg } from '@/utils/constants'
 
 import styles from './sendStyle'
 
@@ -61,7 +62,6 @@ export class Send extends React.Component<IProps> {
 
   @action
   setEstimateGas = (newGas: string | undefined) => {
-    // console.log('setEstimateGas', newGas)
     if (newGas && /^[0-9]*$/.test(newGas) && Number(newGas) >= 21000) {
       this.estimateGas = newGas
     }
@@ -76,25 +76,6 @@ export class Send extends React.Component<IProps> {
   setShowDialog = (flag: boolean) => {
     this.showDialog = flag
   }
-
-  // verifyGetTxFee = (amount: string, address: string, balance: string): string | void => {
-  //   const { labels } = this.props
-  //   const hexAddress = `0x${address.replace('0x', '')}`
-  //   if (!Utils.isAddress(hexAddress)) {
-  //     return labels.swal.invalidAddress
-  //   }
-
-  //   if (Utils.isContractAddress(hexAddress)) {
-  //     return labels.swal.invalidAddress
-  //   }
-
-  //   const amountUnit = new BN(Utils.toUnit(amount))
-  //   const bnUnit = new BN(balance)
-
-  //   if (bnUnit.lt(amountUnit, 10)) {
-  //     return labels.swal.insufficientFunds
-  //   }
-  // }
 
   handleGetEstimateGas = async () => {
     runInAction(() => {
@@ -115,8 +96,6 @@ export class Send extends React.Component<IProps> {
     } catch (e) {
       // console.log(e)
     }
-
-    // console.log('estimateGas', res2)
   }
 
   validateAddress = (address: string) => {
@@ -152,7 +131,6 @@ export class Send extends React.Component<IProps> {
   }
 
   handleSend = async (e: React.FormEvent) => {
-    // const { labels } = this.props
     e.preventDefault()
     try {
       this.validateAddress(this.address)
@@ -163,40 +141,11 @@ export class Send extends React.Component<IProps> {
     } catch (err) {
       swal.fire(err.message, '', 'error')
     }
-    // if (!isValidAmount(this.amount)) {
-    //   await swal.fire(labels.swal.invalidAmount, '', 'error')
-    //   return
-    // }
-    // this.handleShowDialog()
   }
 
   handleCloseDialog = () => {
     this.setShowDialog(false)
   }
-
-  // mock transaction.confirmTransaction timeout
-  // mockTimeout = (
-  //   address: string,
-  //   amount: string,
-  //   memo: string,
-  //   gas: string,
-  //   gasPrice: string
-  // ): Promise<{ success: boolean; info?: string }> => {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       resolve({
-  //         success: true,
-  //         info:
-  //           '0x' +
-  //           Buffer.alloc(44)
-  //             .fill('a')
-  //             .toString()
-  //       })
-  //     }, 3000)
-  //   })
-  // }
-
-  // transformError = ()
 
   wrappedConfirmTransaction = (
     address: string,
@@ -212,13 +161,6 @@ export class Send extends React.Component<IProps> {
       const res = await this.props.transaction!.confirmTransaction(address, amount, memo, gas, gasPrice)
       clearTimeout(timeoutTimer)
       resolve(res)
-      // this.props
-      //   .transaction!.confirmTransaction(address, amount, memo, gas, gasPrice)
-      //   .then(res => {
-      //     clearTimeout(timeoutTimer)
-      //     resolve(res)
-      //   })
-      //   .catch(e => reject(e))
     })
   }
 
@@ -240,30 +182,32 @@ export class Send extends React.Component<IProps> {
         this.initState()
         await swal.fire({
           text: labels.swal.success,
-          type: 'success',
+          icon: 'success',
           confirmButtonText: labels.swal.confirm,
           timer: 1000
         })
         this.props.transaction!.updateTransactionType()
       } else {
         let errorText: string = res.info || ''
-        if (res.info === `ResponseError: Returned error: "this transaction already in tx pool"`) {
-          errorText = labels.swal.alreadyInTxPool
+        if (ErrMsg.hasOwnProperty(res.info as string)) {
+          errorText = labels.swal[ErrMsg[res.info as string]]
         }
-        if (res.info === `ResponseError: Returned error: "tx nonce is invalid"`) {
-          errorText = labels.swal.invalidNonce
-        }
-        if (res.info === `ResponseError: Returned error: "new fee is too low to replace the old one"`) {
-          errorText = labels.swal.tooLowfee
-        }
+        // if (res.info === `ResponseError: Returned error: "this transaction already in tx pool"`) {
+        //   errorText = labels.swal.alreadyInTxPool
+        // }
+        // if (res.info === `ResponseError: Returned error: "tx nonce is invalid"`) {
+        //   errorText = labels.swal.invalidNonce
+        // }
+        // if (res.info === `ResponseError: Returned error: "new fee is too low to replace the old one"`) {
+        //   errorText = labels.swal.tooLowfee
+        // }
         if (errorText.includes('NoEnoughBalance') || errorText.includes('insufficient balance')) {
           errorText = labels.swal.insufficientFunds
         }
-        console.log('send', errorText)
         await swal.fire({
           title: labels.swal.fail,
           text: errorText,
-          type: 'error',
+          icon: 'error',
           confirmButtonText: labels.swal.confirm
         })
       }
@@ -276,7 +220,7 @@ export class Send extends React.Component<IProps> {
       await swal.fire({
         title: labels.swal.fail,
         text: errorText,
-        type: 'error',
+        icon: 'error',
         confirmButtonText: labels.swal.confirm
       })
     }
@@ -289,7 +233,7 @@ export class Send extends React.Component<IProps> {
       this.send()
     } else {
       await swal.fire({
-        type: 'error',
+        icon: 'error',
         title: labels.swal.incorrectPassword
       })
     }

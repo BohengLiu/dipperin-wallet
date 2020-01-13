@@ -60,7 +60,16 @@ export const zhCN = {
       medium: '中',
       strong: '强',
       note:
-        '当您导入钱包时，仅显示您钱包账户前15个有资产的账户，从16个账户开始，需要您点击“添加账户”自行创建出来，里面的资产不会消失。'
+        '当您导入钱包时，仅显示您钱包账户前15个有资产的账户，从16个账户开始，需要您点击“添加账户”自行创建出来，里面的资产不会消失。',
+      select: {
+        selectNet: '选择网络节点',
+        remoteVenus: '远程节点-金星',
+        remoteTest: '远程节点-测试网',
+        localVenus: '本地节点-金星',
+        localTest: '本地节点-测试网',
+        localLocal: '本地节点-本地',
+        storage: '数据存储:'
+      }
     },
     sidebar: {
       wallet: '钱包',
@@ -78,7 +87,8 @@ export const zhCN = {
       left: {
         title: '设置',
         info: '设置您的钱包账户信息',
-        dataDir: '数据储存路径'
+        dataDir: '数据储存路径',
+        moving: '数据迁移中'
       },
       net: {
         title: '选择本地节点',
@@ -136,6 +146,14 @@ export const zhCN = {
         documentTitle: 'Dipperin 钱包',
         copySuccess: '复制成功',
         incorrectPassword: '密码错误'
+      },
+      dataDirPop: {
+        title: '确认存储路径',
+        info: '您的主链数据存储路径将变更，有以下两种数据存储路径变更方式，请选择：',
+        option1: '只变更数据存储路径，不迁移数据，需要重新同步区块高度；',
+        option2: '变更数据存储路径的同时迁移数据，数据迁移的过程中，请勿关闭电脑、钱包软件，避免数据丢失影响钱包使用。',
+        cancel: 'Cancel',
+        confirm: 'Confirm'
       }
     }
   },
@@ -253,7 +271,9 @@ export const zhCN = {
   account: {
     accounts: {
       add: '添加账户',
+      modifyName: '修改账户名',
       account: '账户',
+      accountName: '账户名',
       copySuccess: '复制成功!',
       currentAccount: CurrentAccountCN,
       privateKeyImport: '私钥导入',
@@ -264,7 +284,13 @@ export const zhCN = {
       importSuccessTitle: '导入成功',
       importErrorTitle: '导入失败',
       importError: '请输入正确私钥!',
-      addressReimportError: '导入账户已存在!'
+      addressReimportError: '导入账户已存在!',
+      changeSuccess: '修改成功',
+      deleteAccount: '删除账户',
+      deleteAccountTitle: '确认删除账户',
+      deleteAccountWarning: '当前账户不可删除',
+      deleteAccountText: '删除后将无法找回，请确保当前账户内的资产已全部转移。',
+      deleteSuccess: '账户已删除'
     },
     account: {
       transfer: '转账',
@@ -295,6 +321,9 @@ export const zhCN = {
       call: '调用',
       favoriteContract: '收藏合约',
       contractType: '合约类型',
+      changeContractName: '修改合约名',
+      contractName: '合约名',
+      changeSuccess: '修改成功',
       contract: '合约',
       copySuccess: '复制成功',
       contractCall: '合约调用',
@@ -331,6 +360,12 @@ export const zhCN = {
       pending: '打包中',
       success: '成功',
       fail: '失败',
+      deleteContractTitle: '确认删除合约',
+      deleteContract: '删除合约',
+      ViewHistory: '查看记录',
+      deleteSuccess: '删除成功',
+      cancel: '取消',
+      token: '余额',
       addDialog: {
         title: '添加合约',
         label: '合约地址',
@@ -359,9 +394,9 @@ export const zhCN = {
         noGas: '未输入Gas上限',
         noGasPrice: '未输入Gas单价',
         getAbi: '获取ABI失败',
-        feeMax: '手续费不足',
-        networkError: '当前网络不可用，请检查网络！',
-        noEnoughBalance: '账户余额不足'
+        feeMax: '手续费不足'
+        // networkError: '当前网络不可用，请检查网络！',
+        // noEnoughBalance: '账户余额不足'
       },
       labs: {
         transfer: '合约转账',
@@ -375,7 +410,8 @@ export const zhCN = {
         tooLowfee: '请等待上笔交易上链后发送!',
         tooMuchExtraData: '备注内容过多，请优化备注内容!',
         networkError: '当前网络不可用，请检查网络',
-        insufficientFunds: '账户余额不足'
+        insufficientFunds: '账户余额不足',
+        noEnoughBalance: '账户余额不足'
       }
     },
 
@@ -586,7 +622,16 @@ export const enUS: I18nCollection = {
       medium: 'medium',
       strong: 'strong',
       note:
-        'When you import a wallet, the first 15 non-empty account will be imported. From the 16th account on, you may need to import  manually by "Add Account".'
+        'When you import a wallet, the first 15 non-empty account will be imported. From the 16th account on, you may need to import  manually by "Add Account".',
+      select: {
+        selectNet: 'Select node net',
+        remoteVenus: 'Remote-Venus',
+        remoteTest: 'Remote-Mercury',
+        localVenus: 'Local-Venus',
+        localTest: 'Local-Test',
+        localLocal: 'Local-Local',
+        storage: 'Data Dictionary:'
+      }
     },
     sidebar: {
       wallet: 'Wallet',
@@ -604,7 +649,8 @@ export const enUS: I18nCollection = {
       left: {
         title: 'Setting',
         info: 'Set up your wallet infomation',
-        dataDir: 'Chain Data Dictionary'
+        dataDir: 'Chain Data Dictionary',
+        moving: 'Data moving'
       },
       net: {
         title: 'Select Local Node',
@@ -665,6 +711,15 @@ export const enUS: I18nCollection = {
         documentTitle: 'Dipperin Wallet',
         copySuccess: 'Copy Success',
         incorrectPassword: 'Incorrect password'
+      },
+      dataDirPop: {
+        // TODO
+        title: '确认存储路径',
+        info: '您的主链数据存储路径将变更，有以下两种数据存储路径变更方式，请选择：',
+        option1: '只变更数据存储路径，不迁移数据，需要重新同步区块高度；',
+        option2: '变更数据存储路径的同时迁移数据，数据迁移的过程中，请勿关闭电脑、钱包软件，避免数据丢失影响钱包使用。',
+        cancel: 'Cancel',
+        confirm: 'Confirm'
       }
     }
   },
@@ -784,6 +839,8 @@ export const enUS: I18nCollection = {
     accounts: {
       add: 'Add account',
       account: 'Account',
+      modifyName: 'Modify Name',
+      accountName: 'Account Name',
       copySuccess: 'Replicating Success!',
       currentAccount: CurrentAccountUS,
       privateKeyImport: 'Private Key Import',
@@ -794,7 +851,13 @@ export const enUS: I18nCollection = {
       importSuccessTitle: 'Import Success',
       importErrorTitle: 'Import Failure',
       importError: 'Please enter correct private key!',
-      addressReimportError: 'The account has already existed.'
+      addressReimportError: 'The account has already existed.',
+      changeSuccess: 'Update Success',
+      deleteAccount: 'Delete Account',
+      deleteAccountTitle: 'Confirm delete account',
+      deleteAccountWarning: `you can't delete current account`,
+      deleteAccountText: 'Please ensure that all assets in the current account have been transferred.',
+      deleteSuccess: 'Account deleted'
     },
     account: {
       transfer: 'Transfer',
@@ -825,10 +888,13 @@ export const enUS: I18nCollection = {
       call: 'Call',
       favoriteContract: 'favorite contract',
       contractType: 'Contract Type',
+      changeContractName: 'Update Contract Name',
+      contractName: 'Name',
+      changeSuccess: 'Update Success',
       contract: 'Contract',
       copySuccess: 'Copy Success',
       contractCall: 'Contract Call',
-      confirm: 'confirm',
+      confirm: 'Confirm',
       nocontract: 'No contract',
       create: 'Create',
       created: 'Created',
@@ -861,6 +927,12 @@ export const enUS: I18nCollection = {
       pending: 'pending',
       success: 'success',
       fail: 'fail',
+      deleteContractTitle: 'Confirm Delete Contract',
+      deleteSuccess: 'Delete Success',
+      deleteContract: 'Delete Contract',
+      ViewHistory: 'View History',
+      cancel: 'Cancel',
+      token: 'Token',
       addDialog: {
         title: 'Add Smart Contract',
         label: 'Smart Contract Address',
@@ -889,9 +961,9 @@ export const enUS: I18nCollection = {
         paramsLengthErr: 'Number of input parameter is wrong',
         contractAddressErr: 'The contract address is wrong',
         getAbi: 'Get ABI error',
-        feeMax: 'Fee is less than the minimum fee',
-        networkError: 'Current network is unreachable, please check your network connection.',
-        noEnoughBalance: 'Insufficient balance'
+        feeMax: 'Fee is less than the minimum fee'
+        // networkError: 'Current network is unreachable, please check your network connection.',
+        // noEnoughBalance: 'Insufficient balance'
       },
       labs: {
         transfer: 'Transfer',
@@ -905,7 +977,8 @@ export const enUS: I18nCollection = {
         tooLowfee: 'Please wait until the last transaction finishes!',
         tooMuchExtraData: 'The entered text is too long, please optimize your content.',
         networkError: 'The network connection is abnormal, please check your network！',
-        insufficientFunds: ' Insufficient balance'
+        insufficientFunds: ' Insufficient balance',
+        noEnoughBalance: 'Insufficient balance'
       }
     },
     transfer: {

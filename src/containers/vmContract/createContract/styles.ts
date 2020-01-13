@@ -223,6 +223,10 @@ const styles = createStyles({
     fontSize: '16px',
     margin: '0 auto',
     ...materialButton,
+    backgroundColor: primaryColor,
+    '&:hover': {
+      backgroundColor: primaryColor
+    },
     '& span': {
       fontWeight: 'bold'
     }

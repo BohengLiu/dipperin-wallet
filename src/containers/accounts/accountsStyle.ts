@@ -82,6 +82,12 @@ const styles = createStyles({
     textAlign: 'center',
     cursor: 'pointer'
   },
+  moreWrap: {
+    position: 'absolute',
+    width: 20,
+    right: 6,
+    top: 10
+  },
   bigAccountName: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -118,6 +124,21 @@ const styles = createStyles({
     fontSize: 12,
     lineHeight: '20px',
     wordBreak: 'break-all'
+  },
+  edit: {
+    verticalAlign: 'middle',
+    display: 'inline-block',
+    width: 18,
+    height: 18,
+    minHeight: 0,
+    minWidth: 0,
+    padding: 0,
+    marginLeft: 10,
+    '& img': {
+      width: 14,
+      height: 14,
+      marginBottom: 2
+    }
   },
   copy: {
     display: 'block',

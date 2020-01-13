@@ -58,8 +58,9 @@ class TransactionStore {
               if (!res.transaction) {
                 if (tx.isOverTime(getNowTimestamp()) || this.haveSameNonceSuccessTx(tx, txs)) {
                   tx.setFail()
-
                   updateTx(tx.transactionHash, { status: TRANSACTION_STATUS_FAIL }, getCurrentNet())
+                  // updata account nonce when transition failed
+                  this._store.account.updateAccountsNonce(this._store.account.activeAccount.id)
                 }
                 return
               } else {

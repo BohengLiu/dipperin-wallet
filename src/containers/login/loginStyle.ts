@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { materialButton } from '@/styles/appStyle'
+import { materialButton, primaryColor } from '@/styles/appStyle'
 
 import Bg from '../../images/login-bg.png'
 
@@ -56,6 +56,10 @@ const styles = createStyles({
     margin: '0 auto',
     textTransform: 'none',
     fontSize: '16px',
+    backgroundColor: primaryColor,
+    '&:hover': {
+      backgroundColor: primaryColor
+    },
     ...materialButton,
     '& span': {
       fontWeight: 'bold'

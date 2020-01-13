@@ -85,6 +85,7 @@ const styles = createStyles({
     borderRadius: '4px'
   },
   rowLeft: {
+    position: 'relative',
     height: '45px',
     display: 'flex',
     flexDirection: 'column',
@@ -111,6 +112,19 @@ const styles = createStyles({
       height: 14
     }
   },
+  tokenWrap: {
+    position: 'absolute',
+    top: 6,
+    right: 0,
+    fontSize: 12,
+    color: '#838899',
+    '& span': {
+      fontWeight: 'bold'
+    }
+  },
+  token: {
+    marginLeft: 10
+  },
   date: {
     marginTop: '5px',
     textAlign: 'left',
@@ -121,7 +135,9 @@ const styles = createStyles({
     color: '#838899',
     fontWeight: 400
   },
-  rowRight: {},
+  rowRight: {
+    position: 'relative'
+  },
   detail: {
     width: '28px',
     height: '28px',

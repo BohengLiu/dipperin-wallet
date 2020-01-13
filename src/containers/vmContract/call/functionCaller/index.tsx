@@ -121,7 +121,7 @@ export class FunctionCaller extends React.Component<Props> {
             <Button
               disabled={false}
               variant="contained"
-              style={{ background: '#0A174C' }}
+              color="primary"
               className={classes.button}
               onClick={this.detailCall}
             >

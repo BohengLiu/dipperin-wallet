@@ -33,7 +33,7 @@ export const defaultFont = {
   lineHeight: '1.5em'
 }
 
-export const primaryColor = '#0A174C'
+export const primaryColor = '#528DD0'
 export const infoColor = '#00acc1'
 export const grayColor = '#838899'
 

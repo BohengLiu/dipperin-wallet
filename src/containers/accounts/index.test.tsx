@@ -65,11 +65,11 @@ describe('Containers: Accounts', () => {
 
   it('getBigAccounts', () => {
     const accounts = mockAccountsData.map(AccountModel.fromObj)
-    expect(instance.getBigAccounts('1', accounts)).toEqual([accounts[0], accounts[1], accounts[2]])
-    expect(instance.getBigAccounts('2', accounts)).toEqual([accounts[0], accounts[1], accounts[2]])
-    expect(instance.getBigAccounts('3', accounts)).toEqual([accounts[1], accounts[2], accounts[3]])
-    expect(instance.getBigAccounts('5', accounts)).toEqual([accounts[3], accounts[4], accounts[5]])
-    expect(instance.getBigAccounts('6', accounts)).toEqual([accounts[3], accounts[4], accounts[5]])
+    expect(instance.getBigAccounts(0, accounts)).toEqual([accounts[0], accounts[1], accounts[2]])
+    expect(instance.getBigAccounts(1, accounts)).toEqual([accounts[0], accounts[1], accounts[2]])
+    expect(instance.getBigAccounts(2, accounts)).toEqual([accounts[1], accounts[2], accounts[3]])
+    expect(instance.getBigAccounts(4, accounts)).toEqual([accounts[3], accounts[4], accounts[5]])
+    expect(instance.getBigAccounts(5, accounts)).toEqual([accounts[3], accounts[4], accounts[5]])
   })
 
   it('showAccounts', () => {
@@ -79,10 +79,10 @@ describe('Containers: Accounts', () => {
     instance.getBigAccounts = mockGetBigAccounts
     instance.forceUpdate()
 
-    instance.showAccounts('1')
+    instance.showAccounts(1)
 
-    expect(mockSelectAccount.mock.calls[0][0]).toEqual('1')
-    expect(mockGetBigAccounts.mock.calls[0][0]).toEqual('1')
+    expect(mockSelectAccount.mock.calls[0][0]).toEqual(1)
+    expect(mockGetBigAccounts.mock.calls[0][0]).toEqual(1)
     expect(instance.bigAccounts).toEqual([])
   })
 
@@ -103,10 +103,10 @@ describe('Containers: Accounts', () => {
 
     instance.forceUpdate()
 
-    instance.changeAccount('1')
+    instance.changeAccount(1)
 
-    expect(mockShowAccounts.mock.calls[0][0]).toEqual('1')
-    expect(instance.selectedId).toEqual('1')
+    expect(mockShowAccounts.mock.calls[0][0]).toEqual(1)
+    expect(instance.selectedIndex).toEqual(1)
   })
 
   it('computeMiddleAccount', () => {
@@ -123,7 +123,7 @@ describe('Containers: Accounts', () => {
 
     instance.updateSelectedAccount()
 
-    expect(instance.selectedId).toEqual('1')
+    expect(instance.selectedIndex).toEqual(0)
   })
 
   it('updateSelectedAccount, The number of accounts exceedS one page', () => {
@@ -134,7 +134,7 @@ describe('Containers: Accounts', () => {
 
     instance.updateSelectedAccount()
 
-    expect(instance.selectedId).toEqual('22')
+    expect(instance.selectedIndex).toEqual(22)
   })
 
   it('getSamllListWidth', () => {

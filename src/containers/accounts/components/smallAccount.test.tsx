@@ -17,7 +17,8 @@ describe('smallAccount', () => {
   const mockAccount = new AccountModel(
     'sqEVSm4jZaNAegxA',
     "m/44'/709394'/0'/0/1",
-    '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37'
+    '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37',
+    ''
   )
   const labels = i18n['zh-CN'].account.accounts
   const classes = mockStyleClasses(styles)
@@ -27,27 +28,24 @@ describe('smallAccount', () => {
     labels,
     classes,
     changeAccount,
+    index: 3,
+    selectedIndex: 3,
     activeId: '0x0000000001',
     account: mockAccount,
-    selectedId: '0x',
+    changeSelectedAccount: jest.fn(),
     ...routerProps
   }
 
   let component: ReactWrapper
-  let instance: SmallAccount
+  // let instance: SmallAccount
 
   beforeEach(() => {
     component = mount(<SmallAccount {...mockProps} />)
-    instance = component.instance() as SmallAccount
+    // instance = component.instance() as SmallAccount
     mockSwalFire.mockClear()
   })
 
   it('render', () => {
     expect(component.exists()).toBe(true)
-  })
-
-  it('changeAccount', () => {
-    instance.changeAccount()
-    expect(mockProps.changeAccount.mock.calls[0][0]).toBe('sqEVSm4jZaNAegxA')
   })
 })

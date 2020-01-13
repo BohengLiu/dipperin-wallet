@@ -22,6 +22,8 @@ export default class AccountModel {
   private _type: number = AccountType.hd
   private _privateKey: string = ''
   private _encryptKey: EncryptResult | undefined
+  @observable
+  private _name: string = ''
 
   @observable
   private _balance: BigNumber = new BigNumber(0)
@@ -33,14 +35,15 @@ export default class AccountModel {
    * @param obj
    */
   static fromObj(obj: AccountObj) {
-    return new AccountModel(obj.id.toString(), obj.path, obj.address, { nonce: obj.nonce })
+    return new AccountModel(obj.id.toString(), obj.path, obj.address, '', { nonce: obj.nonce })
   }
 
-  constructor(id: string, path: string, address: string, opt?: Opt) {
+  constructor(id: string, path: string, address: string, name: string, opt?: Opt) {
     runInAction(() => {
       this._id = id
       this._path = path
       this._address = address
+      this._name = name
       if (opt) {
         this._nonce = opt.nonce || '0'
         this._type = opt.type || AccountType.hd
@@ -72,6 +75,10 @@ export default class AccountModel {
   @computed
   get type() {
     return this._type
+  }
+  @computed
+  get name() {
+    return this._name
   }
 
   isHDWallet() {
@@ -160,6 +167,10 @@ export default class AccountModel {
       this._type = type
     }
   }
+  @action
+  updateAccountName(name: string) {
+    this._name = name
+  }
 
   /**
    * Transfer account model to Javascript object
@@ -176,12 +187,14 @@ export default class AccountModel {
       address: this.address,
       id: Number(this.id),
       nonce: this._nonce,
-      path: this.path
+      path: this.path,
+      name: this._name
     }
   }
 }
 
 export interface AccountObj {
+  name: string
   address: string
   id: number
   nonce: string

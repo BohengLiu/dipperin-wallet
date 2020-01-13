@@ -37,6 +37,8 @@ class RootStore {
   private _isConnecting: boolean = false
   @observable
   private _isRemoteNode: boolean
+  @observable
+  private _isMovingData: boolean = false
   constructor() {
     this.initDipperin()
     this.loading = new LoadingStore()
@@ -77,6 +79,11 @@ class RootStore {
     return this._isRemoteNode
   }
 
+  @computed
+  get isMovingData(): boolean {
+    return this._isMovingData
+  }
+
   /**
    * stop connect node
    * 1. change net
@@ -104,6 +111,11 @@ class RootStore {
   @action
   toggleIsRemoteNode() {
     this._isRemoteNode = !this.isRemoteNode
+  }
+
+  @action
+  setIsMovingData(isMoving: boolean) {
+    this._isMovingData = isMoving
   }
 
   /**

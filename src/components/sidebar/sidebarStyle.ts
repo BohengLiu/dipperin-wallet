@@ -1,6 +1,6 @@
 import { createStyles } from '@material-ui/core/styles'
 
-import { drawerWidth, transition, boxShadow, defaultFont, primaryColor, primaryBoxShadow } from '../../styles/appStyle'
+import { drawerWidth, transition, boxShadow, defaultFont, primaryBoxShadow } from '../../styles/appStyle'
 
 const sidebarStyle = theme =>
   createStyles({
@@ -41,6 +41,7 @@ const sidebarStyle = theme =>
     logo: {
       position: 'relative',
       padding: '24px 0 28px',
+      cursor: 'pointer',
       '& .blockInfo': {
         position: 'absolute',
         opacity: 0,
@@ -48,6 +49,9 @@ const sidebarStyle = theme =>
         top: 40,
         width: 0,
         height: 0,
+        // opacity: 1,
+        // width: 248,
+        // height: 240,
         background: '#fff',
         transition: 'all 1s cubic-bezier(0.07, 0.7, 0.2, 1)',
         borderRadius: '10px',
@@ -55,19 +59,24 @@ const sidebarStyle = theme =>
         overflow: 'hidden',
         boxShadow: '0 0 5px 5px rgba(0,0,0,0.05)'
       },
-      '&:hover': {
-        '& .blockInfo': {
-          opacity: 1,
-          width: 248,
-          height: 240
-        }
+      '& .activeInfo': {
+        opacity: 1,
+        width: 248,
+        height: 240
       }
+      // '&:hover': {
+      //   '& .blockInfo': {
+      //     opacity: 1,
+      //     width: 248,
+      //     height: 240
+      //   }
+      // }
     },
     infoDetail: {
       width: 248,
       padding: '0 16px',
       boxSizing: 'border-box',
-      color: primaryColor
+      color: '#0a174c'
     },
     infoTitle: {
       padding: '20px 0',
@@ -84,7 +93,7 @@ const sidebarStyle = theme =>
       width: 12,
       height: 12,
       marginRight: 8,
-      border: `2px solid ${primaryColor}`,
+      border: `2px solid '#0a174c'`,
       borderRadius: '100%'
     },
     itemLabel: {
@@ -171,7 +180,7 @@ const sidebarStyle = theme =>
       backgroundColor: 'transparent',
       userSelect: 'none',
       '&:focus': {
-        backgroundColor: primaryColor
+        backgroundColor: '#0a174c'
       },
       ...defaultFont
     },
@@ -194,24 +203,24 @@ const sidebarStyle = theme =>
       lineHeight: '30px',
       fontSize: 12,
       fontWeight: 'bold',
-      color: primaryColor,
+      color: '#0a174c',
       textAlign: 'center'
     },
     whiteFont: {
       color: '#FFF'
     },
     purple: {
-      backgroundColor: primaryColor,
+      backgroundColor: '#0a174c',
       ...primaryBoxShadow,
       '&:hover': {
-        backgroundColor: primaryColor,
+        backgroundColor: '#0a174c',
         ...primaryBoxShadow
       }
     },
     active: {
-      backgroundColor: primaryColor,
+      backgroundColor: '#0a174c',
       '&:hover': {
-        backgroundColor: primaryColor
+        backgroundColor: '#0a174c'
       }
     },
     sidebarWrapper: {

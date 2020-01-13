@@ -40,25 +40,16 @@ describe('contractList', () => {
     expect(component.exists()).toBe(true)
   })
 
-  // it('redirect', () => {
-  //   const mockHistoryPush = jest.fn()
-  //   mockRouterProps.history.push = mockHistoryPush
-  //   instance.redirect()
-  //   expect(mockHistoryPush).toHaveBeenCalled()
-  // })
-
   it('jumpToCall', () => {
-    const mockHistoryPush = jest.fn()
-    mockRouterProps.history.push = mockHistoryPush
+    mockProps.vmContract.setPath = jest.fn()
     instance.jumpToCall('0x01')
-    expect(mockHistoryPush).toHaveBeenCalled()
+    expect(mockProps.vmContract.setPath).toHaveBeenCalled()
   })
 
   it('jumpToCreate', () => {
-    const mockHistoryPush = jest.fn()
-    mockRouterProps.history.push = mockHistoryPush
+    mockProps.vmContract.setPath = jest.fn()
     instance.jumpToCreate()
-    expect(mockHistoryPush).toHaveBeenCalled()
+    expect(mockProps.vmContract.setPath).toBeCalled()
   })
 
   it('jumpToDetail', () => {

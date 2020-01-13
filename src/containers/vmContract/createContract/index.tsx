@@ -25,6 +25,7 @@ import { I18nCollectionContract } from '@/i18n/i18n'
 import styles from './styles'
 import { helper } from '@dipperin/dipperin.js'
 import { isVmContractAddress, validateEnteringAmount, formatAmount } from '@/utils'
+import { ErrMsg } from '@/utils/constants'
 
 interface WrapProps extends RouteComponentProps<{}> {
   account?: AccountStore
@@ -120,7 +121,7 @@ export class CreateContract extends React.Component<IProps> {
     if (e.target.files && e.target.files.length > 0) {
       if (e.target.files[0].name.split('.').reverse()[0] !== 'wasm') {
         await swal.fire({
-          type: 'error',
+          icon: 'error',
           title: this.props.labels.errorWasmFile
         })
         return
@@ -150,7 +151,7 @@ export class CreateContract extends React.Component<IProps> {
       // console.log(e.target.files[0].name.split('.').reverse())
       if (e.target.files[0].name.split('.').reverse()[0] !== 'json') {
         await swal.fire({
-          type: 'error',
+          icon: 'error',
           title: this.props.labels.errorAbiFile
         })
         return
@@ -166,7 +167,7 @@ export class CreateContract extends React.Component<IProps> {
           this.inputABI!.value = ''
           this.setStringField('inputABIPlaceholder', '')
           swal.fire({
-            type: 'error',
+            icon: 'error',
             title: this.props.labels.errorAbiFile
           })
         }
@@ -302,7 +303,7 @@ export class CreateContract extends React.Component<IProps> {
       if (contractRes.success) {
         await swal.fire({
           title: labels.createSwal.createSuccess,
-          type: 'success',
+          icon: 'success',
           timer: 1000
         })
         this.handleCloseDialog()
@@ -312,12 +313,12 @@ export class CreateContract extends React.Component<IProps> {
         swal.fire({
           title: labels.createSwal.createErr,
           text: errorText,
-          type: 'error'
+          icon: 'error'
         })
       }
     } else {
       await swal.fire({
-        type: 'error',
+        icon: 'error',
         title: labels.createSwal.incorrectPassword
       })
     }
@@ -325,21 +326,27 @@ export class CreateContract extends React.Component<IProps> {
 
   transformErrorInfo = (info: string): string => {
     const labels = this.props.labels
-    if (info === 'Error: Network Error' || info.includes('InvalidConnectionError')) {
-      return labels.createSwal.networkError
-    }
-    if (info === 'insufficient balance') {
-      return labels.createSwal.noEnoughBalance
-    }
+    // if (info === 'Error: Network Error') {
+    //   return labels.createSwal.networkError
+    // }
+    // if (info === 'insufficient balance') {
+    //   return labels.createSwal.noEnoughBalance
+    // }
 
-    if (info === `ResponseError: Returned error: "this transaction already in tx pool"`) {
-      return labels.swal.alreadyInTxPool
+    // if (info === `ResponseError: Returned error: "this transaction already in tx pool"`) {
+    //   return labels.swal.alreadyInTxPool
+    // }
+    // if (info === `ResponseError: Returned error: "tx nonce is invalid"`) {
+    //   return labels.swal.invalidNonce
+    // }
+    // if (info === `ResponseError: Returned error: "new fee is too low to replace the old one"`) {
+    //   return labels.swal.tooLowfee
+    // }
+    if (ErrMsg.hasOwnProperty(info)) {
+      return labels.swal[ErrMsg[info]]
     }
-    if (info === `ResponseError: Returned error: "tx nonce is invalid"`) {
-      return labels.swal.invalidNonce
-    }
-    if (info === `ResponseError: Returned error: "new fee is too low to replace the old one"`) {
-      return labels.swal.tooLowfee
+    if (info.includes('InvalidConnectionError')) {
+      return labels.swal.networkError
     }
     if (info.includes('NoEnoughBalance') || info.includes('insufficient balance')) {
       return labels.swal.insufficientFunds
@@ -374,7 +381,7 @@ export class CreateContract extends React.Component<IProps> {
           swal.fire({
             title: labels.createSwal.createErr,
             text: labels.createSwal.getAbi,
-            type: 'error'
+            icon: 'error'
           })
           return
         }
@@ -391,21 +398,21 @@ export class CreateContract extends React.Component<IProps> {
       if (contractRes.success) {
         await swal.fire({
           title: labels.createSwal.createSuccess,
-          type: 'success',
+          icon: 'success',
           timer: 1000
         })
       } else {
         swal.fire({
           title: labels.createSwal.createErr,
           text: contractRes.info,
-          type: 'error'
+          icon: 'error'
         })
       }
     } catch (e) {
       swal.fire({
         title: labels.createSwal.createErr,
         text: e.message,
-        type: 'error'
+        icon: 'error'
       })
     }
   }
@@ -447,7 +454,6 @@ export class CreateContract extends React.Component<IProps> {
       const res = await this.props.vmContract!.getABI(contractAddress)
       if ('abiArr' in res) {
         const abi = helper.Bytes.fromString(JSON.stringify(res!.abiArr))
-        console.log(`getAbi`, abi)
         this.setStringField(`abi:${contractAddress.toLocaleLowerCase()}`, abi)
       }
     }

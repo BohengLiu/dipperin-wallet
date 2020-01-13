@@ -42,6 +42,14 @@ export const getAccount = async (): Promise<AccountObj[]> => {
   })) as AccountObj[]
   return account
 }
+export const updateSingleAccount = async (account: AccountObj) => {
+  const db = getDB(ACCOUNT_DB)
+  await new Promise(resolve => {
+    db.update({ id: account.id }, { $set: account }, {}, (err, _) => {
+      resolve(true)
+    })
+  })
+}
 
 export const insertAccount = async (account: AccountObj[] | AccountObj) => {
   const db = getDB(ACCOUNT_DB)
@@ -190,6 +198,14 @@ export const updateErrTimes = (walletId: number, unlockErrTimes: number = 0) => 
 /**
  * vm contract
  */
+export const deleteVmContract = async (txHash: string) => {
+  const db = getDB(VM_CONTRACT_DB)
+  await new Promise(resolve => {
+    db.remove({ txHash }, (_, res) => {
+      resolve(true)
+    })
+  })
+}
 
 export const insertVmContract = (contract: VmContractObj, net: string = DEFAULT_NET) => {
   const db = getDB(VM_CONTRACT_DB)
@@ -204,6 +220,15 @@ export const updateVmContractStatus = (
 ) => {
   const db = getDB(VM_CONTRACT_DB)
   db.update({ txHash, net }, { $set: { status, contractAddress } }, { multi: true })
+}
+
+export const updateVmContract = async (contract: VmContractObj) => {
+  const db = getDB(VM_CONTRACT_DB)
+  await new Promise(resolve => {
+    db.update({ txHash: contract.txHash }, { $set: contract }, {}, (err, _) => {
+      resolve(true)
+    })
+  })
 }
 
 export const getVmContract = async (net: string = DEFAULT_NET): Promise<VmContractObj[]> => {

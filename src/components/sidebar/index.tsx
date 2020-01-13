@@ -1,10 +1,11 @@
 import React from 'react'
 import { observer } from 'mobx-react'
+import { observable, action } from 'mobx'
 import classNames from 'classnames'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { NavLink, RouteComponentProps } from 'react-router-dom'
 
-import { Drawer, Hidden, List, ListItem, ListItemText, Tooltip } from '@material-ui/core'
+import { Drawer, Hidden, List, ListItem, ListItemText, Tooltip, ClickAwayListener } from '@material-ui/core'
 // @material-ui/core components
 import { withStyles, WithStyles } from '@material-ui/core/styles'
 
@@ -25,6 +26,13 @@ interface Props extends WithStyles<typeof style>, WrapProps {
 
 @observer
 export class Sidebar extends React.Component<Props> {
+  @observable isShowWalletInfo: boolean = false
+  @action showWalletInfo = () => {
+    this.isShowWalletInfo = true
+  }
+  @action hideWalletInfo = () => {
+    this.isShowWalletInfo = false
+  }
   backToHome = () => {
     this.props.history.push('/')
   }
@@ -82,15 +90,6 @@ export class Sidebar extends React.Component<Props> {
             >
               <ListItem button={false} className={classNames(classes.itemLink, listItemClasses)}>
                 <div className={classes.iconWrap}>
-                  {/* <div
-                    className={classes.icon}
-                    style={{
-                      width: 35,
-                      height: 32,
-                      background: `url(${isActive ? prop.iconActive : prop.icon}) no-repeat`,
-                      backgroundPosition: 'center center',
-                    }}
-                  /> */}
                   <img className={classes.icon} draggable={false} src={isActive ? prop.iconActive : prop.icon} />
                 </div>
                 <ListItemText
@@ -105,48 +104,50 @@ export class Sidebar extends React.Component<Props> {
       </List>
     )
     const brand = (
-      <div className={classes.logo}>
-        <a onClick={this.backToHome} className={classes.logoLink}>
+      <div className={classes.logo} onClick={this.showWalletInfo}>
+        <a className={classes.logoLink}>
           <div className={classes.logoImage}>
             <img src={logo} alt="logo" className={classes.img} />
           </div>
         </a>
-        <div className="blockInfo">
-          <div className={classes.infoDetail}>
-            <div className={classes.infoTitle}>{labels.title}</div>
-            <div className={classes.infoItem}>
-              <div className={classes.infoIcon} />
-              <div className={classes.itemLabel}>{labels.walletVersion}:</div>
-              <div className={classes.itemValue}>{PackageJson.version}</div>
-            </div>
-            <div className={classes.infoItem}>
-              <div className={classes.infoIcon} />
-              <div className={classes.itemLabel}>{labels.dipperinVersion}:</div>
-              <div className={classes.itemValue}>{PackageJson.dipperin.version}</div>
-            </div>
-            <div className={classes.infoItem}>
-              <div className={classes.infoIcon} />
-              <div className={classes.itemLabel}>{labels.height}:</div>
-              <div className={classes.itemValue}>{blockInfo && Number(blockInfo.number)}</div>
-            </div>
-            <div className={classes.infoItem}>
-              <div className={classes.infoIcon} />
-              <div className={classes.itemLabel}>{labels.timestamp}:</div>
-              <Tooltip title={(blockInfo && formatUTCTime(String(Number(blockInfo.timestamp)))) || ''}>
-                <div className={classes.itemValue}>
-                  {blockInfo && formatUTCTime(String(Number(blockInfo.timestamp)))}
-                </div>
-              </Tooltip>
-            </div>
-            <div className={classes.infoItem}>
-              <div className={classes.infoIcon} />
-              <div className={classes.itemLabel}>Nonce:</div>
-              <Tooltip title={(blockInfo && blockInfo.nonce) || ''} classes={{ tooltip: classes.noMaxWidth }}>
-                <div className={classes.itemValue}>{blockInfo && blockInfo.nonce}</div>
-              </Tooltip>
+        <ClickAwayListener onClickAway={this.hideWalletInfo}>
+          <div className={classNames('blockInfo', this.isShowWalletInfo && 'activeInfo')}>
+            <div className={classes.infoDetail}>
+              <div className={classes.infoTitle}>{labels.title}</div>
+              <div className={classes.infoItem}>
+                <div className={classes.infoIcon} />
+                <div className={classes.itemLabel}>{labels.walletVersion}:</div>
+                <div className={classes.itemValue}>{PackageJson.version}</div>
+              </div>
+              <div className={classes.infoItem}>
+                <div className={classes.infoIcon} />
+                <div className={classes.itemLabel}>{labels.dipperinVersion}:</div>
+                <div className={classes.itemValue}>{PackageJson.dipperin.version}</div>
+              </div>
+              <div className={classes.infoItem}>
+                <div className={classes.infoIcon} />
+                <div className={classes.itemLabel}>{labels.height}:</div>
+                <div className={classes.itemValue}>{blockInfo && Number(blockInfo.number)}</div>
+              </div>
+              <div className={classes.infoItem}>
+                <div className={classes.infoIcon} />
+                <div className={classes.itemLabel}>{labels.timestamp}:</div>
+                <Tooltip title={(blockInfo && formatUTCTime(String(Number(blockInfo.timestamp)))) || ''}>
+                  <div className={classes.itemValue}>
+                    {blockInfo && formatUTCTime(String(Number(blockInfo.timestamp)))}
+                  </div>
+                </Tooltip>
+              </div>
+              <div className={classes.infoItem}>
+                <div className={classes.infoIcon} />
+                <div className={classes.itemLabel}>Nonce:</div>
+                <Tooltip title={(blockInfo && blockInfo.nonce) || ''} classes={{ tooltip: classes.noMaxWidth }}>
+                  <div className={classes.itemValue}>{blockInfo && blockInfo.nonce}</div>
+                </Tooltip>
+              </div>
             </div>
           </div>
-        </div>
+        </ClickAwayListener>
       </div>
     )
     return (

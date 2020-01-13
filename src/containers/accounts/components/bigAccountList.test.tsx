@@ -16,8 +16,8 @@ describe('BigAccountList', () => {
   const routerProps = getMockRouterProps<{}>({})
   // const mockRoot = mockRootBuilder()
   const mockAccounts = [
-    new AccountModel('sqEVSm4jZaNAegxA', "m/44'/709394'/0'/0/1", '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37'),
-    new AccountModel('sqEVSm4jZaNAegxA', "m/44'/709394'/0'/0/1", '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37')
+    new AccountModel('sqEVSm4jZaNAegxA', "m/44'/709394'/0'/0/1", '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37', ''),
+    new AccountModel('sqEVSm4jZaNAegxA', "m/44'/709394'/0'/0/1", '0x0000b4293d60F051936beDecfaE1B85d5A46d377aF37', '')
   ]
   const labels = i18n['zh-CN'].account.accounts
   const classes = mockStyleClasses(styles)
@@ -29,6 +29,8 @@ describe('BigAccountList', () => {
     handleChangeActiveAccount,
     activeId: '0x0000000001',
     accounts: mockAccounts,
+    showDialogConfirm: jest.fn(),
+    deleteAccount: jest.fn(),
     ...routerProps
   }
 

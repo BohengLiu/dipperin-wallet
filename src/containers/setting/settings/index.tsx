@@ -28,7 +28,9 @@ import {
   // sendStopNode,
   // sendStartNode,
   // onStartNodeSuccess,
-  cancelDipperinDownload
+  cancelDipperinDownload,
+  moveChainData,
+  moveChainDataListener
 } from '@/ipc'
 import WalletStore from '@/stores/wallet'
 // import RootStore from '@/stores/root'
@@ -42,6 +44,7 @@ import { I18nCollectionWallet } from '@/i18n/i18n'
 import RootStore from '@/stores/root'
 import { DEFAULT_NET, VENUS, TEST, LOCAL, NET_HOST_OBJ, CHAIN_DATA_DIR, IS_REMOTE } from '@/utils/constants'
 import SwitchButton from '@/components/switchButton'
+import ChangeChainDataDirPop from '@/components/changeChainDataDirPop'
 
 import styles from './settingStyle'
 
@@ -76,6 +79,10 @@ export class Setting extends React.Component<Props> {
   showTip: boolean = true
   @observable
   chainDataDir: string = ''
+  @observable
+  showChangeDirPop: boolean = false
+  @observable
+  tempSelectedPath: string = ''
 
   chainDataDirInput: HTMLInputElement
 
@@ -89,7 +96,7 @@ export class Setting extends React.Component<Props> {
       () => {
         this.closeLoading()
         swal.fire({
-          type: 'success',
+          icon: 'success',
           title: labels.swal.updateSuccess,
           timer: 1000
         })
@@ -107,6 +114,12 @@ export class Setting extends React.Component<Props> {
 
     // onStartNodeSuccess(this.nodeStartSuccess)
 
+    moveChainDataListener(this.moveChainDataCb)
+
+    this.setChainDataDirFromSetting()
+  }
+
+  setChainDataDirFromSetting = () => {
     this.setChainDataDir(
       (settings.get(CHAIN_DATA_DIR) as string) || pathModule.join(os.homedir(), 'tmp', 'dipperin_apps')
     )
@@ -162,7 +175,7 @@ export class Setting extends React.Component<Props> {
       showConfirmButton: true,
       cancelButtonText: labels.swal.cancel,
       confirmButtonText: labels.swal.confirm,
-      type: 'warning',
+      icon: 'warning',
       text: labels.swal.warnText,
       title: labels.swal.warn,
       reverseButtons: true
@@ -180,7 +193,7 @@ export class Setting extends React.Component<Props> {
     const { labels, root } = this.props
     const res = await swal.fire({
       text: labels.swal.startUpdate,
-      type: 'warning',
+      icon: 'warning',
       showConfirmButton: true,
       showCancelButton: true,
       cancelButtonText: labels.swal.cancel,
@@ -202,6 +215,8 @@ export class Setting extends React.Component<Props> {
    * change net
    */
   handleChangeNet = net => () => {
+    // update settings netEnv
+    setCurrentNet(net)
     if (net === this.netEnv) {
       return
     }
@@ -210,12 +225,12 @@ export class Setting extends React.Component<Props> {
     })
     // disconnect node
     this.props.root.stopConnectNode()
-    // update settings netEnv
-    setCurrentNet(net)
+
     if (!this.props.root.isRemoteNode) {
       // (ipc)restart local node with different net
       setNodeNet(net)
       // reconnect node in ipc event listener
+      this.props.root.reconnect()
     } else {
       this.selectRemote(net)
     }
@@ -247,6 +262,7 @@ export class Setting extends React.Component<Props> {
   /**
    * select remote note
    */
+  @action
   selectRemote = (remoteNode: string) => {
     // update isRemote in settings
     setIsRemoteNode(true)
@@ -353,7 +369,7 @@ export class Setting extends React.Component<Props> {
       this.handleShowPrivateKey()
     } else {
       swal.fire({
-        type: 'error',
+        icon: 'error',
         title: this.props.labels.swal.incorrectPassword,
         timer: 1000
       })
@@ -382,18 +398,59 @@ export class Setting extends React.Component<Props> {
   }
 
   handleChangeDir = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.files)
+    const { isMovingData } = this.props.root
+    if (isMovingData) {
+      return
+    }
     if (e.target.files && e.target.files.length > 0) {
-      this.setChainDataDir(e.target.files[0].path)
-      settings.set(CHAIN_DATA_DIR, e.target.files[0].path)
-      if (!settings.get(IS_REMOTE)) {
-        this.props.root.stopNode()
-        // sendStopNode()
-        // this.props.root!.stopConnectNode()
-        await sleep(1000)
-        // sendStartNode()
-        this.props.root.startNode()
+      const path = e.target.files[0].path
+      if (path === this.chainDataDir) {
+        return
       }
+      this.setTempSelectedPath(path)
+      this.setShowChangeDirPop(true)
+    }
+  }
+
+  handleConfirmChangeDir = async (moveData: boolean) => {
+    this.setShowChangeDirPop(false)
+    this.setChainDataDir(this.tempSelectedPath)
+    // move data
+    if (moveData) {
+      // set move statu in root store
+      this.props.root.setIsMovingData(true)
+      this.props.root.stopNode()
+      await sleep(1000)
+      // ipc send move data
+      moveChainData(this.tempSelectedPath)
+      return
+    }
+
+    // just change dir
+    // change chain data dir in settings
+    settings.set(CHAIN_DATA_DIR, this.tempSelectedPath)
+    if (!settings.get(IS_REMOTE)) {
+      this.props.root.stopNode()
+      await sleep(1000)
+      this.props.root.startNode()
+    }
+  }
+
+  /**
+   * move chain data callback
+   */
+  moveChainDataCb = (success: boolean) => {
+    this.props.root.setIsMovingData(false)
+    if (success) {
+      // set chain data dir in settings
+      settings.set(CHAIN_DATA_DIR, this.chainDataDir)
+      return
+    }
+    // reset chain data dir when move failure
+    this.setChainDataDirFromSetting()
+    // reset file input when move failure
+    if (this.chainDataDirInput) {
+      this.chainDataDirInput.value = ''
     }
   }
 
@@ -403,10 +460,24 @@ export class Setting extends React.Component<Props> {
     }
   }
 
+  handleCloseChangeDirPop = () => {
+    this.setShowChangeDirPop(false)
+  }
+
   @action
   handleCancelDownload = () => {
     cancelDipperinDownload()
     this.loading = false
+  }
+
+  @action
+  setShowChangeDirPop = (show: boolean) => {
+    this.showChangeDirPop = show
+  }
+
+  @action
+  setTempSelectedPath = (path: string) => {
+    this.tempSelectedPath = path
   }
 
   render() {
@@ -419,6 +490,7 @@ export class Setting extends React.Component<Props> {
     } = this.props
     // const isConnecting = root.isConnecting
     const isRemoteNode = root.isRemoteNode
+    const isMovingData = root.isMovingData
     const activeAccount = account.activeAccount
     if (!activeAccount) {
       return null
@@ -444,7 +516,9 @@ export class Setting extends React.Component<Props> {
               </p>
             </div>
             <div className={classes.dirSelectorBox}>
-              <p>{labels.left.dataDir}</p>
+              <p>
+                {labels.left.dataDir}: {isMovingData && <span>{labels.left.moving}</span>}
+              </p>
               <input
                 type="file"
                 onChange={this.handleChangeDir}
@@ -590,6 +664,13 @@ export class Setting extends React.Component<Props> {
             note={labels.privateKey.notes}
             btnText={labels.privateKey.confirm}
             swal={labels.swal.copySuccess}
+          />
+        )}
+        {this.showChangeDirPop && (
+          <ChangeChainDataDirPop
+            labels={labels}
+            handleChangeDir={this.handleConfirmChangeDir}
+            onClose={this.handleCloseChangeDirPop}
           />
         )}
       </div>

@@ -10,6 +10,13 @@ import mockSwalFire from '@/tests/mocks/swal'
 import { Setting } from './index'
 import styles from './settingStyle'
 
+jest.mock('@/ipc', () => {
+  return {
+    cancelDipperinDownload: jest.fn(),
+    moveChainData: jest.fn(),
+    moveChainDataListener: jest.fn()
+  }
+})
 describe('setting', () => {
   const root = mockRootBuilder(true)
   const mockWallet = root.wallet

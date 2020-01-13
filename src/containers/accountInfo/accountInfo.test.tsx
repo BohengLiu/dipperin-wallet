@@ -4,10 +4,9 @@ import { zhCN } from '@/i18n/i18n'
 import getMockRouterProps from '@/tests/mocks/router'
 import mockRootBuilder from '@/tests/mocks/store'
 import { mockStyleClasses } from '@/tests/utils'
-import { sendStartNode, sendStopNode } from '@/ipc'
+import { sendStartNode } from '@/ipc'
 
 jest.mock('@/ipc')
-const mockSendStopNode = sendStopNode
 const mockSendStartNode = sendStartNode
 
 import styles from './accountStyle'
@@ -100,11 +99,8 @@ describe('AccountInfo', () => {
     instance.changeLoading(false)
     instance.changeNodeRunning(true)
     const spyChangeLoading = jest.spyOn(instance, 'changeLoading')
-    const spyStopConnectNode = jest.spyOn(mockProps.root, 'stopConnectNode')
     instance.handleToggleNode()
     expect(spyChangeLoading.mock.calls[0][0]).toBe(true)
-    expect(mockSendStopNode).toHaveBeenCalled()
-    expect(spyStopConnectNode).toHaveBeenCalled()
     jest.runAllTimers()
   })
 

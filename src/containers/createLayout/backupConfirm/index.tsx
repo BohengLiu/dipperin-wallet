@@ -74,7 +74,7 @@ export class BackupConfirm extends React.Component<IBackupProps> {
     if (!isEqual(this.selectedWords, this.correctWords)) {
       swal.fire({
         title: this.props.labels.swal.wordsWrong,
-        type: 'error'
+        icon: 'error'
       })
       return
     }
@@ -95,7 +95,7 @@ export class BackupConfirm extends React.Component<IBackupProps> {
     wallet.save()
     await swal.fire({
       text: labels.swal.success,
-      type: 'success',
+      icon: 'success',
       confirmButtonText: labels.swal.confirm
     })
     history.push('/main/wallet')

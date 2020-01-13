@@ -57,6 +57,6 @@ describe('utils', () => {
 
   it('formatAmount', () => {
     expect(utils.formatAmount('.3')).toBe('0.3')
-    expect(utils.formatAmount('')).toBe('')
+    expect(utils.formatAmount('')).toBe('0')
   })
 })

@@ -23,7 +23,7 @@ import { validateEnteringAmount, formatAmount } from '@/utils'
 import { I18nCollectionContract } from '@/i18n/i18n'
 import { helper } from '@dipperin/dipperin.js'
 import styles from './styles'
-
+import { ErrMsg } from '@/utils/constants'
 interface WrapProps extends RouteComponentProps {
   vmContract: VmContractStore
   wallet: WalletStore
@@ -168,7 +168,7 @@ export class Call extends React.Component<IProps> {
       if (callRes.success) {
         await swal.fire({
           title: labels.callDialog.callSuccess,
-          type: 'success',
+          icon: 'success',
           timer: 1000
         })
         this.handleCloseDialog()
@@ -177,14 +177,17 @@ export class Call extends React.Component<IProps> {
       } else {
         this.handleCloseDialog()
         let errorText: string = callRes.info || ''
-        if (callRes.info === `ResponseError: Returned error: "this transaction already in tx pool"`) {
-          errorText = labels.swal.alreadyInTxPool
-        }
-        if (callRes.info === `ResponseError: Returned error: "tx nonce is invalid"`) {
-          errorText = labels.swal.invalidNonce
-        }
-        if (callRes.info === `ResponseError: Returned error: "new fee is too low to replace the old one"`) {
-          errorText = labels.swal.tooLowfee
+        // if (callRes.info === `ResponseError: Returned error: "this transaction already in tx pool"`) {
+        //   errorText = labels.swal.alreadyInTxPool
+        // }
+        // if (callRes.info === `ResponseError: Returned error: "tx nonce is invalid"`) {
+        //   errorText = labels.swal.invalidNonce
+        // }
+        // if (callRes.info === `ResponseError: Returned error: "new fee is too low to replace the old one"`) {
+        //   errorText = labels.swal.tooLowfee
+        // }
+        if (ErrMsg.hasOwnProperty(callRes.info as string)) {
+          errorText = labels.swal[ErrMsg[callRes.info as string]]
         }
         if (errorText.includes('NoEnoughBalance') || errorText.includes('insufficient balance')) {
           errorText = labels.swal.insufficientFunds
@@ -193,12 +196,12 @@ export class Call extends React.Component<IProps> {
         await swal.fire({
           title: labels.callDialog.callFail,
           text: errorText,
-          type: 'error'
+          icon: 'error'
         })
       }
     } else {
       swal.fire({
-        type: 'error',
+        icon: 'error',
         title: labels.callDialog.incorrectPassword
       })
     }

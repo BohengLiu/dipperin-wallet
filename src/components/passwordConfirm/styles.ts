@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { grayColor, materialButton } from '@/styles/appStyle'
+import { grayColor, materialButton, primaryColor } from '@/styles/appStyle'
 const styles = createStyles({
   dialogTitle: {
     textAlign: 'center'
@@ -16,6 +16,10 @@ const styles = createStyles({
     fontSize: 16,
     textTransform: 'none',
     ...materialButton,
+    backgroundColor: primaryColor,
+    '&:hover': {
+      backgroundColor: primaryColor
+    },
     '& span': {
       fontWeight: 'bold',
       color: '#fff'

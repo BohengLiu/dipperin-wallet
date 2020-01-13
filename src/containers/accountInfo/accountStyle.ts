@@ -1,5 +1,4 @@
 import { createStyles } from '@material-ui/core/styles'
-import { primaryColor } from '@/styles/appStyle'
 import AccountId from '../../images/account-bg.png'
 
 const styles = createStyles({
@@ -122,9 +121,9 @@ const styles = createStyles({
     transformOrigin: '50% 50%'
   },
   running: {
-    background: '#3450C5',
+    background: '#0A174C',
     '&:hover': {
-      background: '#3450C5'
+      background: '#0A174C'
     }
   },
   lock: {
@@ -137,7 +136,7 @@ const styles = createStyles({
   global: {
     '& span': {
       fontSize: 14,
-      color: primaryColor,
+      color: '#0A174C',
       fontWeight: 'bold'
     }
   },

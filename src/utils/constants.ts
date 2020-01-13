@@ -143,3 +143,21 @@ export enum TIMET_NAME {
 }
 
 export const VM_CONTRACT_ADDRESS = '0x00120000000000000000000000000000000000000000'
+
+/**
+ * move data event status
+ */
+export const MOVE_DATA_STATUS = 'moveDataStatus'
+
+// key:error from backend  value:label in i18n config
+export const ErrMsg = {
+  'no Balance': 'noBalance',
+  'Returned error: "this transaction already in tx pool"': 'inPoolError',
+  'ResponseError: Returned error: "new fee is too low to replace the old one"': 'tooLowfee',
+  'invalid address': 'invalidAddress',
+  noEnoughBalance: 'noEnoughBalance',
+  'ResponseError: Returned error: "this transaction already in tx pool"': 'alreadyInTxPool',
+  'ResponseError: Returned error: "tx nonce is invalid"': 'invalidNonce',
+  'Error: Network Error': 'networkError',
+  'insufficient balance': 'noEnoughBalance'
+}

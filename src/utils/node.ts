@@ -1,9 +1,9 @@
 import settings from './settings'
-import { NET_ENV, IS_REMOTE, NET_HOST_OBJ, LOCALHOST } from './constants'
+import { NET_ENV, IS_REMOTE, NET_HOST_OBJ, LOCALHOST, DEFAULT_NET } from './constants'
 
 export const getCurrentNet = (): string => {
   // FIXME: default is null, should set default value
-  return settings.get(NET_ENV) as string
+  return (settings.get(NET_ENV) as string) || DEFAULT_NET
 }
 
 export const setCurrentNet = (net: string) => {

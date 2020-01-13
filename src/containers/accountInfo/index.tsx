@@ -5,6 +5,7 @@ import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { RouteComponentProps } from 'react-router'
+import { getShowName } from '@/utils'
 
 import { I18nCollectionAccount } from '@/i18n/i18n'
 import ChangeAccount from '@/images/change-account.png'
@@ -145,10 +146,12 @@ export class AccountInfo extends React.Component<Props> {
     const { classes, labels, changeAccount, account, root } = this.props
     // const { blockInfo } = wallet!
     const { activeAccount } = account!
-    const { isRemoteNode } = root!
+    const { isRemoteNode, isMovingData } = root!
     if (!activeAccount) {
       return null
     }
+    const name = activeAccount.name ? activeAccount.name : `${labels.account} ${activeAccount.id}`
+    const shortName = getShowName(name)
 
     return (
       <div className={classes.accountInfo}>
@@ -163,9 +166,7 @@ export class AccountInfo extends React.Component<Props> {
           </div>
         </Button>
         <div className={classes.right} id="selector1">
-          <p>
-            {labels.account} {activeAccount.id}
-          </p>
+          <p title={name}>{shortName}</p>
           <p>
             {this.formatNumber(Number(activeAccount.balance), 6)}
             <span>&nbsp;&nbsp;DIP</span>
@@ -179,7 +180,7 @@ export class AccountInfo extends React.Component<Props> {
           <p>{activeAccount.address}</p>
         </div>
         <div className={classes.btnWrap}>
-          {!isRemoteNode && (
+          {!isRemoteNode && !isMovingData && (
             <div className={classNames(classes.btnItem, classes.nodeSwitch)}>
               <Fab
                 className={classNames(classes.btn, { [classes.running]: this.nodeRuning })}

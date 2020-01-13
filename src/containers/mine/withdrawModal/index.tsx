@@ -6,6 +6,7 @@ import { withTranslation, WithTranslation } from 'react-i18next'
 import swal from 'sweetalert2'
 
 import { I18nCollectionMine } from '@/i18n/i18n'
+import { ErrMsg } from '@/utils/constants'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 import { withStyles, WithStyles } from '@material-ui/core/styles'
 import { validateAddress } from '@/utils'
@@ -90,43 +91,44 @@ export class WithdrawModal extends React.Component<IProps> {
       }
       swal.fire({
         text: this.props.labels.success,
-        type: 'success',
-        // confirmButtonText: labels.swal.confirm,
+        icon: 'success',
         timer: 3000
       })
       this.props.onClose()
     } catch (e) {
       let text: string
-      switch (e.message) {
-        case `no Balance`:
-          text = this.props.labels.noBalance
-          break
-        case `Returned error: "this transaction already in tx pool"`:
-          text = this.props.labels.inPoolError
-          break
-        case `ResponseError: Returned error: "new fee is too low to replace the old one"`:
-          text = this.props.labels.newFeeTooLow
-          break
-        case `invalid address`:
-          text = this.props.labels.invalidAddress
-          break
-        case `noEnoughBalance`:
-          text = this.props.labels.noEnoughBalance
-          break
-        case `ResponseError: Returned error: "this transaction already in tx pool"`:
-          text = this.props.labels.alreadyInTxPool
-          break
-        case `ResponseError: Returned error: "tx nonce is invalid"`:
-          text = this.props.labels.invalidNonce
-          break
-        case `ResponseError: Returned error: "new fee is too low to replace the old one"`:
-          text = this.props.labels.tooLowfee
-          break
-        default:
-          text = e.message
+      if (ErrMsg.hasOwnProperty(e.message)) {
+        text = this.props.labels[ErrMsg[e.message]]
+      } else {
+        text = e.message
       }
+      // switch (e.message) {
+      //   case `no Balance`:
+      //     text = this.props.labels.noBalance
+      //     break
+      //   case `Returned error: "this transaction already in tx pool"`:
+      //     text = this.props.labels.inPoolError
+      //     break
+      //   case `invalid address`:
+      //     text = this.props.labels.invalidAddress
+      //     break
+      //   case `noEnoughBalance`:
+      //     text = this.props.labels.noEnoughBalance
+      //     break
+      //   case `ResponseError: Returned error: "this transaction already in tx pool"`:
+      //     text = this.props.labels.alreadyInTxPool
+      //     break
+      //   case `ResponseError: Returned error: "tx nonce is invalid"`:
+      //     text = this.props.labels.invalidNonce
+      //     break
+      //   case `ResponseError: Returned error: "new fee is too low to replace the old one"`:
+      //     text = this.props.labels.tooLowfee
+      //     break
+      //   default:
+      //     text = e.message
+      // }
       swal.fire({
-        type: 'error',
+        icon: 'error',
         timer: 3000,
         text
       })

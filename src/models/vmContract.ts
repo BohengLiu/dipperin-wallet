@@ -21,9 +21,16 @@ class ContractModel {
   private _txHash: string
   @observable
   private _owner: string[]
+  @observable
+  private _isDRC20: boolean
+  @observable
+  private _contractName: string = ''
 
   @observable
   private _contractData: string
+
+  @observable
+  private _DRC20Token?: string
 
   static fromObj(obj: VmContractObj) {
     return new ContractModel(obj)
@@ -35,22 +42,19 @@ class ContractModel {
     } else {
       this._owner = [options.owner]
     }
-
     this._status = options.status || TRANSACTION_STATUS_PENDING
-
     this._contractAddress = options.contractAddress || ''
-
+    this._contractName = options.contractName || ''
     if (options.txHash) {
       this._txHash = options.txHash
     }
-
     this._timestamp = options.timestamp || getNowTimestamp()
-
     this._contractAbi = options.contractAbi
-
     if (options.contractCode) {
       this.createContract(options.contractCode, options.contractAbi, options.initParams || [])
     }
+
+    this._isDRC20 = this._getIsDRC20(options)
   }
 
   @computed
@@ -86,6 +90,9 @@ class ContractModel {
   get contractData() {
     return this._contractData
   }
+  get contractName() {
+    return this._contractName
+  }
 
   @computed
   get isEnded(): boolean {
@@ -106,6 +113,21 @@ class ContractModel {
     return this.status === TRANSACTION_STATUS_SUCCESS
   }
 
+  @computed
+  get isDRC20(): boolean {
+    return this._isDRC20
+  }
+
+  @computed
+  get DRC20Token(): string | undefined {
+    return this._DRC20Token
+  }
+
+  @action
+  setDRC20Token(token: string) {
+    this._DRC20Token = token
+  }
+
   @action
   addOwner = (address: string) => {
     if (this._owner instanceof Array) {
@@ -113,6 +135,10 @@ class ContractModel {
     } else {
       this._owner = [this._owner, address]
     }
+  }
+  @action
+  setName = (name: string) => {
+    this._contractName = name
   }
 
   isOverTime(now: number): boolean {
@@ -142,15 +168,43 @@ class ContractModel {
   }
 
   toJS(): VmContractObj {
-    const { owner, contractAddress, status, timestamp, txHash, contractAbi } = this
+    const { owner, contractAddress, status, timestamp, txHash, contractAbi, contractName } = this
 
     return {
+      contractName,
       owner,
       contractAddress,
       contractAbi,
       status,
       timestamp,
       txHash
+    }
+  }
+
+  private _getIsDRC20(options: VmContractOptions): boolean {
+    try {
+      let isDRC20 = false
+      const { contractAbi } = options
+      const abi = VmContract.convertAbiStrToAbiJSON(contractAbi)
+      const transfer = abi.find(item => item.name === 'transfer') as any
+      const getBanlance = abi.find(item => item.name === 'getBalance') as any
+      const isDRC20Transfer =
+        transfer!.inputs.length === 2 &&
+        transfer.inputs[0].type === 'string' &&
+        transfer.inputs[1].type === 'uint64' &&
+        transfer.outputs.length === 1 &&
+        transfer.outputs[0].type === 'bool'
+      const isDRC20GetBanlace =
+        getBanlance.inputs.length === 1 &&
+        getBanlance.inputs[0].type === 'string' &&
+        getBanlance.outputs.length === 1 &&
+        getBanlance.outputs[0].type === 'uint64'
+      if (isDRC20Transfer && isDRC20GetBanlace) {
+        isDRC20 = true
+      }
+      return isDRC20
+    } catch (_) {
+      return false
     }
   }
 }
@@ -166,9 +220,12 @@ interface VmContractOptions {
   timestamp?: number
   txHash?: string
   initParams?: string[]
+  isDRC20?: boolean
+  contractName?: string
 }
 
 export interface VmContractObj {
+  contractName: string
   owner: string[]
   contractAddress: string
   contractAbi: string

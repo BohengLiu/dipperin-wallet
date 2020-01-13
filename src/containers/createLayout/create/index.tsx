@@ -89,7 +89,7 @@ export class Create extends React.Component<ICreateProps> {
     const errInfo = this.verifyPassword(this.password, this.repeatPassword, labels)
     if (errInfo) {
       swal.fire({
-        type: 'error',
+        icon: 'error',
         title: errInfo,
         confirmButtonText: labels.swal.confirm
       })

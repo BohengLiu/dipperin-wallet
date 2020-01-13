@@ -9,6 +9,7 @@ import React, { Fragment } from 'react'
 import { withTranslation, WithTranslation } from 'react-i18next'
 import { RouteComponentProps } from 'react-router'
 import { Route, Switch } from 'react-router-dom'
+import selectNet from '@/components/chainNodeSetting'
 
 // components
 import Sidebar from '../components/sidebar'
@@ -105,6 +106,8 @@ class Routes extends React.Component<Props> {
       <Fragment>
         <Sidebar logo={Logo} routes={routes} location={location} history={history} wallet={wallet} />
         <div className={classNames(classes.main, { [classes.filter]: downloading })}>
+          <Route path="/" exact={true} component={selectNet} />
+          <Route path="/create" exact={true} component={selectNet} />
           <Switch location={location}>
             <Route path="/" exact={true} component={Import} />
             <Route path="/login" exact={true} component={Login} />

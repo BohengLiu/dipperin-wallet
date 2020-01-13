@@ -22,7 +22,8 @@ import {
   CHAIN_IPC_PATH,
   CHAIN_DATA_DIR,
   MOVE_CHAIN_DATA_DIR,
-  CANCEL_DIPPERIN_DOWNLOAD
+  CANCEL_DIPPERIN_DOWNLOAD,
+  MOVE_DATA_STATUS
 } from '@/utils/constants'
 import { getIsRemoteNode } from '@/utils/node'
 
@@ -191,11 +192,16 @@ export const getChainDataDir = (): Promise<string> => {
 }
 
 /**
- * @param oldPath
  * @param newPath
  */
-export const moveChainData = (oldPath: string, newPath: string) => {
-  ipcRenderer.send(MOVE_CHAIN_DATA_DIR, oldPath, newPath)
+export const moveChainData = (newPath: string) => {
+  ipcRenderer.send(MOVE_CHAIN_DATA_DIR, newPath)
+}
+
+export const moveChainDataListener = (cb: (success: boolean) => void) => {
+  ipcRenderer.on(MOVE_DATA_STATUS, (_: Event, success: boolean) => {
+    cb(success)
+  })
 }
 
 export const cancelDipperinDownload = () => {

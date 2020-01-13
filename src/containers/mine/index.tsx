@@ -119,7 +119,7 @@ export class Mine extends React.Component<RouteComponentProps<{}> & IProps> {
       switch (startMineResult[1]) {
         case 'remote node error': {
           await swal.fire({
-            type: 'error',
+            icon: 'error',
             text: this.props.labels.remoteNodeError,
             title: this.props.labels.startFailure,
             timer: 2000
@@ -128,7 +128,7 @@ export class Mine extends React.Component<RouteComponentProps<{}> & IProps> {
         }
         case 'stop node error': {
           await swal.fire({
-            type: 'error',
+            icon: 'error',
             text: this.props.labels.unstartNodeError,
             title: this.props.labels.startFailure,
             timer: 2000
@@ -137,7 +137,7 @@ export class Mine extends React.Component<RouteComponentProps<{}> & IProps> {
         }
         case `wait service start`: {
           await swal.fire({
-            type: 'error',
+            icon: 'error',
             text: this.props.labels.remoteNodeError,
             title: this.props.labels.startFailure,
             timer: 2000

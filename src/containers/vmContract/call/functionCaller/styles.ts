@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { materialButton } from '@/styles/appStyle'
+import { materialButton, primaryColor } from '@/styles/appStyle'
 
 const styles = createStyles({
   callerBox: {
@@ -82,7 +82,11 @@ const styles = createStyles({
     fontSize: '12px',
     lineHeight: '24px',
     fontWeight: 'bold',
-    ...materialButton
+    ...materialButton,
+    backgroundColor: primaryColor,
+    '&:hover': {
+      backgroundColor: primaryColor
+    }
     // '& span': {
     //   fontWeight: 'bold'
     // }

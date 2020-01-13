@@ -14,10 +14,15 @@ interface Props extends WithStyles<typeof styles> {
   label: string
   btnText: string
   type?: string
+  defaultVal?: string
 }
 
 @observer
 export class DialogConfirm extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props)
+    this.value = props.defaultVal || ''
+  }
   @observable
   value: string = ''
 
