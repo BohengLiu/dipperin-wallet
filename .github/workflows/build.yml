@@ -56,7 +56,7 @@ jobs:
 
       - name: Upload Release AppImage
         if: startsWith(github.event.ref, 'refs/tags/')
-        id: upload-release-asset
+        id: upload-release-asset-AppImage
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,7 +68,7 @@ jobs:
       
       - name: Upload Release deb
         if: startsWith(github.event.ref, 'refs/tags/')
-        id: upload-release-asset
+        id: upload-release-asset-deb
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -97,7 +97,7 @@ jobs:
 
       - name: Upload Release exe
         if: startsWith(github.event.ref, 'refs/tags/')
-        id: upload-release-asset
+        id: upload-release-asset-exe
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -109,7 +109,7 @@ jobs:
       
       - name: Upload Release zip
         if: startsWith(github.event.ref, 'refs/tags/')
-        id: upload-release-asset
+        id: upload-release-asset-zip
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -137,7 +137,7 @@ jobs:
       
       - name: Upload Release zip
         if: startsWith(github.event.ref, 'refs/tags/')
-        id: upload-release-asset
+        id: upload-release-asset-mac-zip
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
