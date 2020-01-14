@@ -31,7 +31,7 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: Show dir
-      - run: ls
+        run: ls
 
       - name: Show dist
-      - run: ls ./dist
+        run: ls ./dist
