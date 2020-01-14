@@ -1,7 +1,5 @@
 import ContractModel from './contract'
-import {
-  TRANSACTION_LIMIT_TIME
-} from '@/utils/constants'
+import { TRANSACTION_LIMIT_TIME } from '@/utils/constants'
 
 describe('models/contract', () => {
   const tokenName = 'name'
