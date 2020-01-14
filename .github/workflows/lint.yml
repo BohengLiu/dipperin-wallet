@@ -22,14 +22,15 @@ jobs:
         run: yarn install
 
       - name: Run linters
-        uses: samuelmeuli/lint-action@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          auto_fix: ${{ github.event_name == 'pull_request' }}
-          eslint: true
-          eslint_args: --ignore-path ./.gitignore
-          eslint_extensions: ts,tsx
-          prettier: true
-          prettier_args: --ignore-path ./.gitignore
-          stylelint: true
-          stylelint_args: --ignore-path ./.gitignore
+        uses: yarn fix
+      
+      - name: Commit changes
+      uses: EndBug/add-and-commit@v2 
+      with:
+        author_name: Github Action
+        author_email: it@dipperin.io
+        message: "Auto Lint"
+        path: "."
+        pattern: "*.*"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
