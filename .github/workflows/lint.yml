@@ -22,7 +22,7 @@ jobs:
         run: yarn install
 
       - name: Run linters
-        uses: yarn fix
+        run: yarn fix
       
       - name: Commit changes
         uses: EndBug/add-and-commit@v2 
