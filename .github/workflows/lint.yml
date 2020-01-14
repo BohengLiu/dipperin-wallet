@@ -24,13 +24,12 @@ jobs:
       - name: Run linters
         run: yarn fix
       
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v2 
+      - name: push
+        uses: github-actions-x/commit@v2.3
         with:
-          author_name: Github Action
-          author_email: it@dipperin.io
-          message: "Auto Lint"
-          path: "."
-          pattern: "*.*"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'master'
+          commit-message: 'lint'
+          force-add: 'false'
+          name: Github Action
+          email: it@dipperin.io 
