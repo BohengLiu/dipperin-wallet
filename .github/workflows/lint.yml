@@ -25,12 +25,12 @@ jobs:
         uses: yarn fix
       
       - name: Commit changes
-      uses: EndBug/add-and-commit@v2 
-      with:
-        author_name: Github Action
-        author_email: it@dipperin.io
-        message: "Auto Lint"
-        path: "."
-        pattern: "*.*"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: EndBug/add-and-commit@v2 
+        with:
+          author_name: Github Action
+          author_email: it@dipperin.io
+          message: "Auto Lint"
+          path: "."
+          pattern: "*.*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
