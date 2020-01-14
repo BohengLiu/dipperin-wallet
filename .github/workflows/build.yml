@@ -1,15 +1,46 @@
 name: Build/release
 
-on: push
+on: [push, pull_request]
+  push:
+    branches:
+      - master
+  pull_request:
+    brancher:
+      - master
 
 jobs:
-  release:
-    runs-on: ${{ matrix.os }}
+  try_create_release:
+    name: Try create release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set output
+      id: vars
+      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:11})
+    - name: Create Release
+      if: startsWith(github.event.ref, 'refs/tags/')
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Output Release URL File
+      if: startsWith(github.event.ref, 'refs/tags/')
+      run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+    - name: Save Release URL File for publish
+      if: startsWith(github.event.ref, 'refs/tags/')
+      uses: actions/upload-artifact@v1
+      with:
+        name: release_url
+        path: release_url.txt
 
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-
+  ubuntu:
+    name: Build on Ubuntu
+    needs: try_create_release
+    runs-on: ubuntu-latest
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v1
@@ -18,20 +49,100 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
+      
+      - name: Build
+        run: yarn release:linux
 
-      # - name: Build/release Electron app
-      #   uses: samuelmeuli/action-electron-builder@v1
-      #   with:
-      #     # GitHub token, automatically provided to the action
-      #     # (No need to define this secret in the repo settings)
-      #     github_token: ${{ secrets.github_token }}
 
-      #     # If the commit is tagged with a version (e.g. "v1.0.0"),
-      #     # release the app after building
-      #     release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+      - name: Upload Release AppImage
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./dist/Dipperin-Wallet-linux-${{GITHUB_REF:11}}.AppImage
+          asset_name: Dipperin-Wallet-linux-1.3.2.AppImage
+          asset_content_type: application/AppImage
+      
+      - name: Upload Release deb
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./dist/Dipperin-Wallet-linux-1.3.2.deb
+          asset_name: Dipperin-Wallet-linux-1.3.2.deb
+          asset_content_type: application/deb
 
-      - name: Show dir
-        run: ls
+  window:
+    name: Build on Windows
+    needs: try_create_release
+    runs-on: windows-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
 
-      - name: Show dist
-        run: ls ./dist
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      
+      - name: Build
+        run: yarn release:win
+
+
+      - name: Upload Release exe
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./dist/Dipperin-Wallet-linux-${{ steps.vars.outputs.tag }}.exe
+          asset_name: Dipperin-Wallet-linux-${{ steps.vars.outputs.tag }}.exe
+          asset_content_type: application/exe
+      
+      - name: Upload Release zip
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./dist/Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.zip
+          asset_name: Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.zip
+          asset_content_type: application/zip
+
+  macos:
+    name: Build on MacOS
+    needs: try_create_release
+    runs-on: macos-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      
+      - name: Build
+        run: yarn release:mac
+      
+      - name: Upload Release zip
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+          asset_path: ./dist/Dipperin-Wallet-mac-${{ steps.vars.outputs.tag }}.zip
+          asset_name: Dipperin-Wallet-mac-${{ steps.vars.outputs.tag }}.zip
+          asset_content_type: application/zip
