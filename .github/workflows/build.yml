@@ -23,7 +23,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
+        tag_name: ${{ github.ref }}x123456
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
@@ -94,11 +94,11 @@ jobs:
         with:
           node-version: 10
       
-      - name: Build
-        run: yarn release:win
-      
       - name: Install Dependencies
         run: yarn
+      
+      - name: Build
+        run: yarn release:win
 
       - name: Upload Release exe
         # if: startsWith(github.event.ref, 'refs/tags/')
