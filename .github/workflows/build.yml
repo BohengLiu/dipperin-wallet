@@ -5,7 +5,6 @@ on: release
 jobs:
   ubuntu:
     name: Build on Ubuntu
-    needs: try_create_release
     runs-on: ubuntu-latest
     steps:
       - name: Set output
@@ -71,7 +70,6 @@ jobs:
 
   window:
     name: Build on Windows
-    needs: try_create_release
     runs-on: windows-latest
     steps:
       - name: Set output
@@ -137,7 +135,6 @@ jobs:
 
   macos:
     name: Build on MacOS
-    needs: try_create_release
     runs-on: macos-latest
     steps:
       - name: Set output
