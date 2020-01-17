@@ -3,34 +3,6 @@ name: Build/release
 on: release
 
 jobs:
-  # try_create_release:
-  #   name: Try create release
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Set output
-  #     id: vars
-  #     run: echo ::set-output name=tag::$(echo ${GITHUB_REF:11})
-  #   - name: Create Release
-  #     if: startsWith(github.event.ref, 'refs/tags/')
-  #     id: create_release
-  #     uses: actions/create-release@v1.0.0
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       tag_name: ${{ github.ref }}x123456
-  #       release_name: Release ${{ github.ref }}
-  #       draft: false
-  #       prerelease: false
-  #   - name: Output Release URL File
-  #     # if: startsWith(github.event.ref, 'refs/tags/')
-  #     run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
-  #   - name: Save Release URL File for publish
-  #     # if: startsWith(github.event.ref, 'refs/tags/')
-  #     uses: actions/upload-artifact@v1
-  #     with:
-  #       name: release_url
-  #       path: release_url.txt
-
   ubuntu:
     name: Build on Ubuntu
     needs: try_create_release
