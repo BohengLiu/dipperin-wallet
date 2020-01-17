@@ -90,43 +90,29 @@ jobs:
       - name: Build
         run: yarn release:win
 
-      - name: Upload to release exe
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: ./dist/Dipperin-Wallet-win-${{steps.vars.outputs.tag}}.exe application/exe
+      - name: Upload Release exe
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset-exe
+        uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Upload Release exe
-      #   # if: startsWith(github.event.ref, 'refs/tags/')
-      #   id: upload-release-asset-exe
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-      #     asset_path: ./dist/Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.exe
-      #     asset_name: Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.exe
-      #     asset_content_type: application/exe
-
-      # - name: Upload Release zip
-      #   # if: startsWith(github.event.ref, 'refs/tags/')
-      #   id: upload-release-asset-zip
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-      #     asset_path: ./dist/Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.zip
-      #     asset_name: Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.zip
-      #     asset_content_type: application/zip
-
-      - name: Upload to release win zip
-        uses: JasonEtco/upload-to-release@master
         with:
-          args: ./dist/Dipperin-Wallet-win-${{steps.vars.outputs.tag}}.zip application/zip
+          upload_url: ${{ github.event.event.release.assets_url }}
+          asset_path: ./dist/Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.exe
+          asset_name: Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.exe
+          asset_content_type: application/exe
+
+      - name: Upload Release zip
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset-zip
+        uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.event.release.assets_url }}
+          asset_path: ./dist/Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.zip
+          asset_name: Dipperin-Wallet-win-${{ steps.vars.outputs.tag }}.zip
+          asset_content_type: application/zip
 
       - name: Dump GitHub context
         env:
@@ -155,24 +141,24 @@ jobs:
       - name: Build
         run: yarn release:mac
 
-      # - name: Upload Release zip
-      #   # if: startsWith(github.event.ref, 'refs/tags/')
-      #   id: upload-release-asset-mac-zip
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.get_release_info.outputs.upload_url }}
-      #     asset_path: ./dist/Dipperin-Wallet-mac-${{ steps.vars.outputs.tag }}.zip
-      #     asset_name: Dipperin-Wallet-mac-${{ steps.vars.outputs.tag }}.zip
-      #     asset_content_type: application/zip
-
-      - name: Upload to release mac zip
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: ./dist/Dipperin-Wallet-mac-${{steps.vars.outputs.tag}}.zip application/zip
+      - name: Upload Release zip
+        if: startsWith(github.event.ref, 'refs/tags/')
+        id: upload-release-asset-mac-zip
+        uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.event.release.assets_url }}
+          asset_path: ./dist/Dipperin-Wallet-mac-${{ steps.vars.outputs.tag }}.zip
+          asset_name: Dipperin-Wallet-mac-${{ steps.vars.outputs.tag }}.zip
+          asset_content_type: application/zip
+
+      # - name: Upload to release mac zip
+      #   uses: JasonEtco/upload-to-release@master
+      #   with:
+      #     args: ./dist/Dipperin-Wallet-mac-${{steps.vars.outputs.tag}}.zip application/zip
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Dump GitHub context
         env:
