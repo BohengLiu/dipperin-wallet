@@ -42,9 +42,9 @@ jobs:
           MATRIX_CONTEXT: ${{ toJson(matrix) }}
         run: echo "$MATRIX_CONTEXT"
       
-      - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: 2.txt application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Upload to release
+      #   uses: JasonEtco/upload-to-release@master
+      #   with:
+      #     args: 2.txt application/zip
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
