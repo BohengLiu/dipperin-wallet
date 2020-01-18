@@ -20,9 +20,11 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=verison::${GITHUB_REF/refs\/tags\/v/}
+        shell: bash
 
       - name: Show output
-        run: echo ${ steps.vars.outputs.verison } 
+        run: echo ${{ steps.vars.outputs.verison }}
+        shell: bash
 
       - name: Dump GitHub context
         env:
