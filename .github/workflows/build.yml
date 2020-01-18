@@ -75,6 +75,9 @@ jobs:
       - name: Set output
         id: vars
         run: echo ::set-output name=tag::$(echo ${GITHUB_REF:11})
+      
+      - name: Echo vars
+        run: echo ${{ steps.vars.outputs.tag }}
 
       - name: Check out Git repository
         uses: actions/checkout@v1
