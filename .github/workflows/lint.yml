@@ -19,6 +19,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10
+      
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\/v/}
 
       - name: Install dependencies
         if: startsWith(github.ref, 'refs/heads/')
@@ -38,11 +42,6 @@ jobs:
           force-add: 'false'
           name: Github Action
           email: it@dipperin.io
-      
-      - name: test string process
-        env:
-          GITHUB_CONTEXT: ${{ github.ref[11:] }}
-        run: echo "$GITHUB_CONTEXT"
 
       - name: Dump GitHub context
         env:

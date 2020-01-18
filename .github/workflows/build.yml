@@ -74,7 +74,7 @@ jobs:
     steps:
       - name: Set output
         id: vars
-        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:11})
+        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\/v/}
       
       - name: Echo vars
         run: echo ${{ steps.vars.outputs.tag }}
