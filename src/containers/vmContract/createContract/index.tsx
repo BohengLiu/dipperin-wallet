@@ -297,8 +297,10 @@ export class CreateContract extends React.Component<IProps> {
       const gasPrice = this.getStringField('gasPrice')
       const amount = this.getStringField('amount')
       const params = this.getStringField('params')
-        .split(',')
-        .map(param => param.trim())
+        ? this.getStringField('params')
+            .split(',')
+            .map(param => param.trim())
+        : []
       const contractRes = await this.props.vmContract!.confirmCreateContract(code, abi, gas, gasPrice, amount, params)
 
       if (contractRes.success) {
